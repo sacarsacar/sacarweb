@@ -1,0 +1,240 @@
+/* ===== project ===== */
+
+/* Title */
+.section-title {
+  text-align: center;
+  margin: 20px;
+  padding: 20px;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: crimson;
+}
+
+/* Container */
+.project__container {
+  row-gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10rem;
+  padding: 0 2rem;
+}
+
+.project__item {
+  text-align: center;
+}
+
+/* img container */
+.project__img-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  width: 100%; 
+  padding-top: 66.66%; 
+  box-shadow: 0px 4px 25px rgba(14, 36, 49, 0.15);
+} 
+
+.project__img {
+  box-shadow: 0px 4px 25px rgba(14, 36, 49, 0.15);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.project__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 1s;
+}
+
+.project__img img:hover {
+  transform: scale(1.1);
+}
+
+/* img container hover effect */
+.project__img-wrapper:hover img {
+  transform: scale(0.95);
+  transition: transform 0.5s ease;
+}
+
+.project__img-wrapper:hover {
+  border: 2px solid #02e5f9;
+  transition: border 0.5s ease, box-shadow 0.5s ease;
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* project heading */
+.project__heading {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Category Navigation */
+.category-nav {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.category-btn {
+  background-color: #575557;
+  color: rgb(2, 229, 249);
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 5px;
+}
+
+.category-btn:hover {
+  color: #ff3e09;
+}
+
+/*  btn Effect */
+.project__img-wrapper:hover .see-live-btn {
+  opacity: 1;
+}
+
+ .see-live-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #f03afd;
+  padding: 0.5rem 1rem;
+  border-radius: 1.3rem;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.5s, background-position 0.5s ease;
+  font-size: 0.98rem;
+  font-weight: 600;
+  background: linear-gradient(120deg, #ea8585, #04f143, #f18705, #03a0f4);
+  background-size: 300% 300% 300% 300%;
+}
+
+.see-live-btn:hover {
+  color: rgb(10, 10, 10);
+  animation: waterWave 2s ease infinite;
+}
+
+.see-live-btn i {
+  margin-right: 5px;
+} 
+
+
+/* Footer */
+footer {
+  color: rgb(7, 7, 7);
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 20px;
+  width: 100%;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* For Dark Mode */
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #313234;
+  color: #02e5f9;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  background-color: #ff3e09;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: rgb(49, 53, 53);
+  color: #cfcfcf;
+}
+
+body.dark-mode .section-title {
+  color: #76ea87;
+}
+
+body.dark-mode .project__heading {
+  color: #faf6f8;
+}
+
+body.dark-mode .category-btn {
+  background-color: #444;
+  color: #faf6f8;
+}
+
+body.dark-mode .category-btn:hover {
+  background-color: #ff3e09;
+}
+
+body.dark-mode .see-live-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #76ea87;
+}
+
+body.dark-mode footer {
+  color: #cfcfcf;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .section-title {
+      font-size: 2rem;
+  }
+
+  .project__heading {
+      font-size: 1.25rem;
+  }
+
+  .category-btn {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+  }
+
+  .project__img-wrapper {
+      padding-top: 75%; /* Adjust aspect ratio for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+      font-size: 1.5rem;
+  }
+
+  .project__heading {
+      font-size: 1rem;
+  }
+
+  .category-btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+  }
+
+  .project__img-wrapper {
+      padding-top: 100%; /* 1:1 aspect ratio for very small screens */
+  }
+}

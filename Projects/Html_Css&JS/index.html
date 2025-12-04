@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" href="assets/img/logo-removebg-preview.png">
+    <title>HTML, CSS & JS PROJECTS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <!-- Dark Mode -->
+    <button id="darkModeToggle" class="dark-mode-toggle">
+        <i id="darkModeIcon" class="fas fa-moon"></i>
+    </button>
+    
+    
+   
+    <!--===== project =====-->
+    <section class="project section" id="project">
+        <h2 class="section-title">Projects Using </br> <span style="color: darkcyan; text-shadow: 5cap; font-size: 20px;">__HTML, CSS & JS__</span></h2>
+ <!--===== Category Navigation =====-->
+        <nav class="category-nav">
+          <button class="category-btn" onclick="filterProjects('all')">All</button>
+          <button class="category-btn" onclick="filterProjects('games')">Games</button>
+          <button class="category-btn" onclick="filterProjects('tools')">Tools</button>
+          <button class="category-btn" onclick="filterProjects('others')">Others</button>
+        </nav>
+
+        <div class="project__container bd-grid">
+            <div class="project__item" data-category="games">
+                <h3 class="project__heading">Tic Tac Toe</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://tictactoegamebysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/tictactoe.png" alt="Tic Tac Toe" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i>Play Now</div>
+                        >
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Expense Tracker</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://expensetrackerbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/ExpenseTracker.png" alt="Expense Tracker" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="games">
+                <h3 class="project__heading">Number Guessing Game</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://numberguessinggamebysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/NumberGuessing.png" alt="Number Guessing Game" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i>Play Now</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="others">
+                <h3 class="project__heading">Clock</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://clockbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/Clock.png" alt="Clock" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> See Live</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Age Calculator</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://agecalculatorbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/AgeCalculator.png" alt="Age Calculator" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Password Generator</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://passwordgeneratorbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/PasswordGenerator.png" alt="Password Generator" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Alarm Clock</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://alarmbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/AlarmClock.png" alt="Alarm Clock" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">To_Do_List</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://todolistbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/ToDoList.png" alt="To_Do_List" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Weight Converter</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://weightconverterbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/WeightConverter.png" alt="Weight Converter" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="games">
+                <h3 class="project__heading">Card Flip</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://cardflipgamebysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/CardFlipGame.png" alt="Card Flip" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i>Play Now</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="games">
+                <h3 class="project__heading">Rock Paper Scissors</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://srpgamebysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/RockPaperScissorsGame.png" alt="Rock Paper Scissors" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i>Play Now</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Calculator</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://calculatorbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/Calculator.png" alt="Calculator" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="games">
+                <h3 class="project__heading">Snake Game</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://snakegamebysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/SnakeGame.png" alt="Snake Game" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i>Play Now</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="others">
+                <h3 class="project__heading">Filterable Gallery</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://gallarybysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/Filterable Gallary.png" alt="Filterable Gallery" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> See Live</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Stop Watch & Text to Speech</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://miniprojectsbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/StopWatch_Speech.png" alt="Stop Watch & Text to Speech" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Counter</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://numbercounterbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/Counter.png" alt="Counter" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="others">
+                <h3 class="project__heading">Login Form</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://loginformbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/LoginForm.png" alt="Login Form" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> See Live</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="tools">
+                <h3 class="project__heading">Captcha Generator</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://captchageneratorbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/CaptchaGenerator.png" alt="Captcha Generator" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> Use Now </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="others">
+                <h3 class="project__heading">Calendar</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://calenderbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/Calender.png" alt="Calendar" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> See Live</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="others">
+                <h3 class="project__heading">Card Hover</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://cardhoverbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/CardHover.png" alt="Card Hover" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> See Live</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="others">
+                <h3 class="project__heading">Hover Effect</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://hovereffectbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/HoverEffect.png" alt="Hover Effect" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> See Live</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project__item" data-category="others">
+                <h3 class="project__heading">Skill Bar</h3>
+                <div class="project__img-wrapper">
+                    <a href="https://skillbarbysakar.netlify.app/" class="project__img-link" target="_blank">
+                        <img src="assets/img/SkillBar.png" alt="Skill Bar" class="project__img">
+                        <div class="see-live-btn"><i class="fas fa-eye"></i> See Live</div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <footer>
+        <p>&copy; <span id="currentYear"></span> 
+            <a href="https://sakarc.com.np/" target="_blank" style="color: rgb(247, 26, 26); text-decoration: none;">Sakar Chaulagain</a>. 
+            All rights reserved.
+        </p>
+    </footer>
+    
+    <script src="assets/script.js"></script>
+</body>
+</html>
