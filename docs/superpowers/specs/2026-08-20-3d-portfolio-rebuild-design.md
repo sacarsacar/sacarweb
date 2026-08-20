@@ -654,3 +654,35 @@ rendered — switched to `--fg-muted` at 28% opacity. And the figcaption duplica
 text and the bio's opening line while wrapping badly, so it was cut.
 
 Ping and tilt are both disabled under `prefers-reduced-motion`.
+
+
+## 23. Change log — profile nodes ("Find me")
+
+**2026-08-20.** Sakar asked whether photos could be pulled live from his social profiles and linked
+back to them. **Live pulling is not achievable for this site**, and the reasons are worth recording
+so it isn't retried:
+
+| Platform | Status |
+|---|---|
+| **GitHub** | ✅ `github.com/<user>.png` — public, no auth, no CORS problem. Verified 200 image/jpeg. |
+| **Instagram** | ❌ Basic Display API shut down. The old `?__a=1` endpoint now returns an empty login wall (verified). The Graph API needs a Business/Creator account, app review, and a token refreshed every 60 days. |
+| **Facebook** | ❌ Graph API, app review required for any user content. |
+| **X** | ❌ API is paid (from $100/mo). |
+| **LinkedIn** | ❌ Profile data is partner-gated. |
+
+Every "no" needs a server to hold and refresh a secret. This site has no backend by design (§3), and
+a token shipped in client JS on a static host is a public token. A third-party embed widget was
+considered and rejected: external script, CSP and privacy cost, and most still require a Business
+Instagram account.
+
+**Built instead:** a "Find me" strip in About — profile nodes wired together by a hairline, the same
+mesh idea as the device rail, applied to where he exists online. Each node links to its profile.
+Photos are local files in `public/photos/`, so nothing expires and nothing breaks.
+
+- GitHub's node uses the **real, live-fetched avatar**; `scripts/fetch-avatars.mjs` refreshes it.
+- The rest fall back to a platform initial until he drops images into `public/photos/` and sets
+  `photo` in `src/data/socials.json`. `npm run verify` lists which are still missing, and fails if a
+  declared photo file doesn't exist.
+
+Deliberately **not** framed as "my Instagram feed" — curated photos presented as a live feed would
+be a small lie built into the page.

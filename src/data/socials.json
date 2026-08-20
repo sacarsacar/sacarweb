@@ -1,0 +1,37 @@
+[
+  {
+    "id": "github",
+    "label": "GitHub",
+    "handle": "sacarsacar",
+    "url": "https://github.com/sacarsacar",
+    "photo": "/photos/github.webp"
+  },
+  {
+    "id": "linkedin",
+    "label": "LinkedIn",
+    "handle": "sakar-chaulagain",
+    "url": "https://np.linkedin.com/in/sakar-chaulagain",
+    "photo": null
+  },
+  {
+    "id": "instagram",
+    "label": "Instagram",
+    "handle": "sakarchaulagain",
+    "url": "https://www.instagram.com/sakarchaulagain",
+    "photo": null
+  },
+  {
+    "id": "x",
+    "label": "X",
+    "handle": "SacarSakar",
+    "url": "https://x.com/SacarSakar",
+    "photo": null
+  },
+  {
+    "id": "facebook",
+    "label": "Facebook",
+    "handle": "Sakar Chaulagain",
+    "url": "https://www.facebook.com/profile.php?id=61551658731708",
+    "photo": null
+  }
+]

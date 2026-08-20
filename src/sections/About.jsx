@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { profile, projects, skills } from '../data'
 import { Reveal } from '../Reveal'
+import { Profiles } from './Profiles'
 
 const shipped = projects.filter((p) => p.shipped).length
 
@@ -42,6 +43,8 @@ export function About() {
             <Stat value={skills.length} label="Technologies" />
             <Stat value="1" label="On Play Store" />
           </dl>
+
+          <Profiles />
 
           <div className="mt-10 flex flex-wrap gap-3">
             <a

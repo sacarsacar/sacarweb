@@ -3,6 +3,7 @@ import rawMini from './mini-projects.json'
 import rawSkills from './skills.json'
 import shots from './shots.json'
 import rawExperience from './experience.json'
+import rawSocials from './socials.json'
 
 /** Source data uses short keys; a few have no skills.json entry (and one is misspelled). */
 const LABEL = {
@@ -100,6 +101,15 @@ export const contextCounts = CONTEXTS.reduce((acc, { id }) => {
   acc[id] = projects.filter((p) => p.context === id).length
   return acc
 }, {})
+
+/**
+ * Profile nodes. `photo` is a file in public/photos/, not a live API pull:
+ * Instagram's Basic Display API is gone and the Graph API needs a Business
+ * account plus a token refreshed every 60 days, which a static site can't hold.
+ * Only GitHub exposes an avatar publicly — see scripts/fetch-avatars.mjs.
+ */
+export const socials = rawSocials
+export const socialsMissingPhotos = socials.filter((s) => !s.photo).map((s) => s.id)
 
 export const skills = rawSkills
 export const miniProjects = rawMini

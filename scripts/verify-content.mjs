@@ -17,6 +17,7 @@ const check = (cond, msg) => { if (!cond) fail.push(msg) }
 const projects = read('src/data/projects.json')
 const shots = read('src/data/shots.json')
 const experience = read('src/data/experience.json')
+const socials = read('src/data/socials.json')
 const mini = read('src/data/mini-projects.json')
 const skills = read('src/data/skills.json')
 
@@ -79,6 +80,21 @@ if (assumed.length) {
     `classification (${assumed.map((p) => p.id).join(', ')}).\n` +
     `   No repo or in-app branding confirmed it. Set "context" in src/data/projects.json\n` +
     `   and remove "contextAssumed" once verified.\n`
+  )
+}
+
+for (const s of socials) {
+  check(/^https?:\/\//.test(s.url), `social "${s.id}": bad url ${s.url}`)
+  if (s.photo) check(existsSync(join(root, 'public', s.photo)), `social "${s.id}": missing photo public${s.photo}`)
+}
+
+const noPhoto = socials.filter((s) => !s.photo)
+if (noPhoto.length) {
+  console.warn(
+    `\nℹ  ${noPhoto.length} profile${noPhoto.length === 1 ? '' : 's'} have no photo ` +
+    `(${noPhoto.map((s) => s.id).join(', ')}) and fall back to an initial.\n` +
+    `   Only GitHub exposes an avatar without auth. Drop images into public/photos/\n` +
+    `   and set "photo" in src/data/socials.json to use real ones.\n`
   )
 }
 
