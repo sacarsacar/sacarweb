@@ -1,5 +1,7 @@
 import { lazy, Suspense, useState } from 'react'
 import { useTheme, useReducedMotion } from './useTheme'
+import { useSmoothScroll } from './useSmoothScroll'
+import { Reveal } from './Reveal'
 import { useScrollRail } from './useScrollRail'
 import { orderedProjects, profile } from './data'
 import { WorkPanel } from './sections/Work'
@@ -21,6 +23,7 @@ export default function App() {
   const { toggle, isDark } = useTheme()
   const reduced = useReducedMotion()
   const showRail = has3D && !reduced
+  useSmoothScroll(!reduced)
   const [open, setOpen] = useState(null)
   const { ref, railPos, engage, index } = useScrollRail(orderedProjects.length, showRail)
   const active = orderedProjects[index]
@@ -87,22 +90,22 @@ export default function App() {
             className="pointer-events-none relative z-10 transition-opacity duration-500"
             style={{ opacity: 1 - Math.min(engage, 1) }}
           >
-            <p className="label">{profile.place} · {profile.role}</p>
-            <h1 className="mt-3 font-display text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.82] tracking-tight">
+            <Reveal as="p" delay={80} className="label">{profile.place} · {profile.role}</Reveal>
+            <Reveal as="h1" delay={160} className="mt-3 font-display text-[clamp(2.75rem,9vw,7.5rem)] leading-[0.82] tracking-tight">
               SAKAR<br />CHAULAGAIN
-            </h1>
-            <p className="mt-5 max-w-md text-lg text-muted">{profile.thesis}</p>
-            <div className="pointer-events-auto mt-7 flex flex-wrap gap-3">
+            </Reveal>
+            <Reveal as="p" delay={300} className="mt-5 max-w-md text-lg text-muted">{profile.thesis}</Reveal>
+            <Reveal delay={400} className="pointer-events-auto mt-7 flex flex-wrap gap-3">
               <a href={profile.cv} className="label rounded-full border border-line px-4 py-2.5 hover:border-accent hover:text-accent">Résumé</a>
               <a href="#contact" className="label rounded-full bg-accent px-4 py-2.5 text-bg hover:opacity-80">Hire me</a>
-            </div>
+            </Reveal>
 
             {/* The rail is scroll-driven, so say so — otherwise ten projects sit
                 behind an interaction nobody knows is there. */}
-            <div className="mt-12 flex items-center gap-3">
+            <Reveal delay={520} className="mt-12 flex items-center gap-3">
               <span className="scroll-cue h-8 w-px bg-line" aria-hidden />
               <span className="label">Scroll · {orderedProjects.length} projects</span>
-            </div>
+            </Reveal>
           </div>
 
           <div

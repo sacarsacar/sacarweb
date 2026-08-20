@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { orderedProjects, PLATFORMS, platformCounts } from '../data'
+import { Reveal } from '../Reveal'
 import { StatusPill } from './Work'
 
 /**
@@ -54,12 +55,13 @@ export function ProjectIndex({ onOpen }) {
 
       <ul className="mt-4 border-t border-line">
         {shown.map((p, i) => (
-          <li key={p.id}>
+          <Reveal as="li" key={p.id} delay={Math.min(i, 5) * 70}>
             <button
               onClick={() => onOpen(p)}
               aria-label={`Read the ${p.title} case study`}
               className="group flex w-full items-start gap-4 border-b border-line py-5 text-left
-                         transition-colors hover:bg-raised sm:gap-6 sm:py-6"
+                         transition-[background-color,padding] duration-300 hover:bg-raised
+                         hover:pl-2 sm:gap-6 sm:py-6"
             >
               <span className="label hidden w-8 shrink-0 pt-1 sm:block">
                 {String(i + 1).padStart(2, '0')}
@@ -70,8 +72,8 @@ export function ProjectIndex({ onOpen }) {
                 alt=""
                 loading="lazy"
                 className="aspect-[4/5] w-16 shrink-0 rounded-md border border-line bg-raised
-                           object-cover object-top transition-colors group-hover:border-accent
-                           sm:w-20 md:w-24"
+                           object-cover object-top transition-[transform,border-color] duration-400
+                           group-hover:-translate-y-1 group-hover:border-accent sm:w-20 md:w-24"
               />
 
               <div className="min-w-0 flex-1">
@@ -105,7 +107,7 @@ export function ProjectIndex({ onOpen }) {
                 Read →
               </span>
             </button>
-          </li>
+          </Reveal>
         ))}
       </ul>
 

@@ -511,3 +511,44 @@ Eleven total, all green. Two of the failures during this pass were **my checks, 
 `#index li` was also counting the platform chips nested inside each row (5 rows + 8 chips = 13), and
 the expansion check inherited the "Desktop" filter left selected by the check before it. Both
 selectors tightened.
+
+
+## 19. Change log — motion pass
+
+**2026-08-20.**
+
+**One easing curve.** Everything uses expo-out (`cubic-bezier(.16, 1, .3, 1)`) via a `--ease` token:
+fast arrival, soft settle. A single curve across scroll, hover, reveal and dialog is what reads as
+"smooth" — mixed curves read as unfinished, and slow curves read as sluggish rather than silky.
+
+**Scroll inertia.** Added `lenis` and **removed `gsap`**, which had been an unused dependency since
+scaffold. Lenis does the one thing CSS genuinely cannot: native scroll jumps a fixed distance per
+wheel tick, Lenis interpolates between them. In-page anchors are routed through it or they jump.
+`html { scroll-behavior }` switched to `auto` — native smooth scrolling fights Lenis.
+
+**Reveal on scroll.** `<Reveal>` wraps sections and list items: fade plus a 20px rise, staggered by
+index. Per-element `IntersectionObserver` rather than one page-wide scan, so rows added later by a
+filter change or "See all" animate too, with no re-wiring. Each observer disconnects after firing —
+nothing re-hides on scroll back up.
+
+`filter: blur(6px)` was in the first version and was **cut**: with 29 skill chips and 15 archive rows
+revealing at once, that is a real GPU cost on mid-range Android for an effect the fade already
+delivers.
+
+**Open/close.** The case study animates in and out via `@starting-style` and `allow-discrete` on
+`display`/`overlay`, so the exit isn't cut off the way a plain `dialog[open]` transition is. The
+backdrop fades and blurs with it.
+
+**Hover.** Index rows shift `padding-left` and lift their thumbnail; skill chips and archive rows
+rise slightly; the archive arrow slides. All on the shared curve.
+
+**Rail offset** reduced 1.45 → 1.15 on desktop. The headline max shrank to 7.5rem in the previous
+pass, so the larger offset was leaving the centred device hard against the frame edge.
+
+**Reduced motion.** Lenis is not constructed at all, reveals resolve immediately, and dialog
+transitions are disabled. A new assertion checks every `[data-reveal]` computes to `opacity: 1`
+under `prefers-reduced-motion` — an opacity-based reveal whose hook never fires would hide the page
+permanently, which is the one failure mode here that is worse than no animation. Twelve assertions,
+all green.
+
+**Cost:** first paint 76 → **83 KB gzip**, against the 500 KB budget.

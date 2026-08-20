@@ -12,7 +12,7 @@ import { Device, SPACING } from './Device'
  */
 function useRailTransform() {
   const { size } = useThree()
-  if (size.width >= 1024) return { position: [1.45, 0, 0], scale: 1 }
+  if (size.width >= 1024) return { position: [1.15, 0, 0], scale: 1 }
   if (size.width >= 768) return { position: [0.9, 0.35, 0], scale: 0.9 }
   return { position: [0, 1.15, 0], scale: 0.78 }
 }

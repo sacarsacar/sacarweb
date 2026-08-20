@@ -72,6 +72,19 @@ results['all images have alt'] = await p.evaluate(
   () => [...document.images].every((i) => i.hasAttribute('alt'))
 )
 
+// Reduced motion must not leave revealed content stuck invisible — the reveal
+// is opacity-based, so a hook that never fires would hide the page for good.
+const rm = await b.newPage()
+await rm.setViewport({ width: 1440, height: 900 })
+await rm.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }])
+await rm.goto(URL, { waitUntil: 'networkidle2' })
+await new Promise((r) => setTimeout(r, 1200))
+results['reduced motion reveals everything'] = await rm.evaluate(() => {
+  const els = [...document.querySelectorAll('[data-reveal]')]
+  return els.length > 0 && els.every((e) => getComputedStyle(e).opacity === '1')
+})
+await rm.close()
+
 await b.close()
 for (const [k, v] of Object.entries(results)) console.log(`${v ? '✓' : '✗'} ${k}`)
 console.log(errs.length ? 'PAGE ERRORS: ' + errs.join(' | ') : 'no page errors')

@@ -1,4 +1,5 @@
 import { profile, projects, skills } from '../data'
+import { Reveal } from '../Reveal'
 
 const shipped = projects.filter((p) => p.shipped).length
 
@@ -10,7 +11,7 @@ export function About() {
       className="relative z-10 border-t border-line bg-bg px-5 py-20 sm:px-6 md:px-10 md:py-28 lg:px-14"
     >
       <div className="grid items-start gap-10 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] md:gap-14 lg:gap-20">
-        <figure className="mx-auto w-48 sm:w-56 md:mx-0 md:w-full">
+        <Reveal as="figure" className="mx-auto w-48 sm:w-56 md:mx-0 md:w-full">
           <div className="relative">
             <img
               src="/me.webp"
@@ -29,9 +30,9 @@ export function About() {
               <span className="label text-fg">Available</span>
             </span>
           </div>
-        </figure>
+        </Reveal>
 
-        <div>
+        <Reveal delay={120}>
           <p className="label">About</p>
           <h2 className="mt-3 max-w-2xl font-display text-[clamp(1.75rem,4.5vw,3rem)] leading-[1.05]">
             {profile.thesis}
@@ -72,7 +73,7 @@ export function About() {
               Hire me
             </a>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

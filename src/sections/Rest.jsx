@@ -1,18 +1,22 @@
 import { skills, miniByCategory, profile } from '../data'
+import { Reveal } from '../Reveal'
 
 export function Stack() {
   return (
     <section id="stack" className="relative z-10 border-t border-line bg-bg px-6 py-24 md:px-14">
-      <p className="label">What I build with</p>
-      <h2 className="mt-3 max-w-2xl font-display text-4xl leading-[0.95] md:text-6xl">
-        No proficiency scores. Just what shipped, and what it was built with.
-      </h2>
+      <Reveal>
+        <p className="label">What I build with</p>
+        <h2 className="mt-3 max-w-2xl font-display text-4xl leading-[0.95] md:text-6xl">
+          No proficiency scores. Just what shipped, and what it was built with.
+        </h2>
+      </Reveal>
       <ul className="mt-10 flex flex-wrap gap-2">
-        {skills.map((s) => (
-          <li key={s.name} className="group relative">
+        {skills.map((s, i) => (
+          <Reveal as="li" key={s.name} delay={Math.min(i, 14) * 35} className="group relative">
             <span
               className="label flex items-center gap-2 rounded-full border border-line px-3 py-2
-                         text-fg transition-colors hover:border-accent"
+                         text-fg transition-[border-color,transform,color] duration-300
+                         hover:-translate-y-0.5 hover:border-accent"
             >
               <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
               {s.name}
@@ -27,7 +31,7 @@ export function Stack() {
                 {s.tagline}
               </span>
             )}
-          </li>
+          </Reveal>
         ))}
       </ul>
     </section>
@@ -38,31 +42,35 @@ export function Archive() {
   const order = ['tools', 'games']
   return (
     <section id="archive" className="relative z-10 border-t border-line bg-bg px-6 py-24 md:px-14">
-      <p className="label">Playground · 2022—2023</p>
-      <h2 className="mt-3 max-w-2xl font-display text-4xl leading-[0.95] md:text-6xl">
-        Early work
-      </h2>
-      <p className="mt-4 max-w-lg text-muted">
-        Fifteen small things built while learning the web. All still live.
-      </p>
+      <Reveal>
+        <p className="label">Playground · 2022—2023</p>
+        <h2 className="mt-3 max-w-2xl font-display text-4xl leading-[0.95] md:text-6xl">
+          Early work
+        </h2>
+        <p className="mt-4 max-w-lg text-muted">
+          Fifteen small things built while learning the web. All still live.
+        </p>
+      </Reveal>
 
       {order.filter((c) => miniByCategory[c]).map((cat) => (
         <div key={cat} className="mt-10">
           <p className="label">{cat}</p>
           <ul className="mt-3 grid gap-x-8 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
-            {miniByCategory[cat].map((m) => (
-              <li key={m.title}>
+            {miniByCategory[cat].map((m, i) => (
+              <Reveal as="li" key={m.title} delay={Math.min(i, 8) * 45}>
                 <a
                   href={m.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-baseline justify-between gap-3 border-b border-line py-2.5
-                             transition-colors hover:border-accent hover:text-accent"
+                  className="group/row flex items-baseline justify-between gap-3 border-b border-line
+                             py-2.5 transition-[border-color,color,padding] duration-300
+                             hover:border-accent hover:pl-1.5 hover:text-accent"
                 >
                   <span>{m.title.replace(/_/g, ' ')}</span>
-                  <span className="label shrink-0">↗</span>
+                  <span className="label shrink-0 transition-transform duration-300
+                                   group-hover/row:translate-x-0.5">↗</span>
                 </a>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </div>
@@ -75,7 +83,7 @@ export function Contact() {
   return (
     <section id="contact" className="relative z-10 border-t border-line bg-bg px-6 py-24 md:px-14">
       <div className="grid gap-14 lg:grid-cols-2">
-        <div>
+        <Reveal>
           <p className="label">Contact</p>
           <h2 className="mt-3 font-display text-4xl leading-[0.95] md:text-6xl">
             Let’s build something
@@ -104,10 +112,10 @@ export function Contact() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
 
         {/* Posts to the existing Google Apps Script endpoint — no backend to run. */}
-        <form action={profile.formAction} method="post" className="grid gap-3 content-start">
+        <Reveal as="form" delay={120} action={profile.formAction} method="post" className="grid gap-3 content-start">
           <Field name="Name" label="Your name" required />
           <Field name="Email" label="Email" type="email" required />
           <Field name="Subject" label="Subject" required />
@@ -128,7 +136,7 @@ export function Contact() {
           >
             Send message
           </button>
-        </form>
+        </Reveal>
       </div>
 
       <footer className="label mt-24 flex flex-wrap justify-between gap-3 border-t border-line pt-6">
