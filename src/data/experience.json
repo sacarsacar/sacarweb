@@ -1,0 +1,34 @@
+[
+  {
+    "id": "placeholder-1",
+    "placeholder": true,
+    "company": "Sample Company One",
+    "role": "Flutter Developer",
+    "period": "2024 — Present",
+    "location": "Kathmandu, Nepal",
+    "summary": "Placeholder summary. Replace with what you actually owned here.",
+    "highlights": [
+      "Built and shipped a cross-platform attendance product used by internal teams.",
+      "Owned the offline-first data layer, so the app kept working on unreliable networks.",
+      "Worked with the backend team on API contracts and release automation."
+    ],
+    "stack": ["flutter", "dart", "node", "postgres", "docker"],
+    "projects": []
+  },
+  {
+    "id": "placeholder-2",
+    "placeholder": true,
+    "company": "Sample Company Two",
+    "role": "Junior Mobile Developer",
+    "period": "2023 — 2024",
+    "location": "Kathmandu, Nepal",
+    "summary": "Placeholder summary. Replace with what you actually owned here.",
+    "highlights": [
+      "Shipped features across two client Flutter apps from design hand-off to store release.",
+      "Migrated local persistence to Hive and cut cold-start time on low-end devices.",
+      "Wrote the team's first widget tests and set up CI to run them on every push."
+    ],
+    "stack": ["flutter", "dart", "hive", "firebase", "figma"],
+    "projects": []
+  }
+]

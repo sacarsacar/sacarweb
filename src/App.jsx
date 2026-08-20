@@ -9,6 +9,7 @@ import { CaseStudy } from './sections/CaseStudy'
 import { Stack, Archive, Contact } from './sections/Rest'
 import { ProjectIndex } from './sections/Index'
 import { About } from './sections/About'
+import { Experience } from './sections/Experience'
 
 // three.js is ~1MB. Split it out so text paints without waiting on WebGL.
 const Scene = lazy(() => import('./three/Scene').then((m) => ({ default: m.Scene })))
@@ -60,6 +61,7 @@ export default function App() {
         <nav className="flex items-center gap-5">
           <a href="#index" className="label hidden hover:text-accent sm:inline">Work</a>
           <a href="#about" className="label hidden hover:text-accent sm:inline">About</a>
+          <a href="#experience" className="label hidden hover:text-accent lg:inline">Experience</a>
           <a href="#contact" className="label hover:text-accent">Contact</a>
           <button
             onClick={toggle}
@@ -126,6 +128,8 @@ export default function App() {
       <ProjectIndex onOpen={setOpen} />
 
       <About />
+
+      <Experience onOpenProject={setOpen} />
 
       <Stack />
       <Archive />

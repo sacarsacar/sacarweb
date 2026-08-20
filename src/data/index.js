@@ -2,6 +2,7 @@ import rawProjects from './projects.json'
 import rawMini from './mini-projects.json'
 import rawSkills from './skills.json'
 import shots from './shots.json'
+import rawExperience from './experience.json'
 
 /** Source data uses short keys; a few have no skills.json entry (and one is misspelled). */
 const LABEL = {
@@ -29,6 +30,11 @@ const full = (folder, name) => `/shots/full/${folder}/${name}.webp`
  */
 const isHeading = (s) => s.length < 44 && !/[.!?:]$/.test(s.trim())
 
+export const CONTEXTS = [
+  { id: 'work', label: 'Client work' },
+  { id: 'personal', label: 'Personal' },
+]
+
 export const PLATFORMS = [
   { id: 'mobile', label: 'Mobile app' },
   { id: 'web', label: 'Web app' },
@@ -47,6 +53,8 @@ export const projects = rawProjects.map((p) => {
     folder,
     shipped: p.status === 'completed',
     platforms: p.platforms ?? [],
+    context: p.context ?? 'personal',
+    contextLabel: CONTEXTS.find((c) => c.id === p.context)?.label ?? 'Personal',
     platformLabels: (p.platforms ?? []).map(
       (id) => PLATFORMS.find((x) => x.id === id)?.label ?? id
     ),
@@ -70,6 +78,26 @@ export const orderedProjects = [
 /** How many projects sit in each platform bucket — drives the filter counts. */
 export const platformCounts = PLATFORMS.reduce((acc, { id }) => {
   acc[id] = projects.filter((p) => p.platforms.includes(id)).length
+  return acc
+}, {})
+
+/**
+ * Work history. Entries flagged `placeholder: true` are sample data — the
+ * section renders a visible notice and CI warns until they're replaced.
+ * Fabricated employment history must never ship silently.
+ */
+export const experience = rawExperience.map((e) => ({
+  ...e,
+  stackLabels: (e.stack ?? []).map(label),
+  linkedProjects: (e.projects ?? [])
+    .map((id) => rawProjects.find((p) => p.id === id))
+    .filter(Boolean),
+}))
+
+export const hasPlaceholderExperience = experience.some((e) => e.placeholder)
+
+export const contextCounts = CONTEXTS.reduce((acc, { id }) => {
+  acc[id] = projects.filter((p) => p.context === id).length
   return acc
 }, {})
 

@@ -16,6 +16,7 @@ const check = (cond, msg) => { if (!cond) fail.push(msg) }
 
 const projects = read('src/data/projects.json')
 const shots = read('src/data/shots.json')
+const experience = read('src/data/experience.json')
 const mini = read('src/data/mini-projects.json')
 const skills = read('src/data/skills.json')
 
@@ -30,6 +31,7 @@ for (const p of projects) {
   check(p.frontend?.length > 0, `project ${p.id}: no frontend stack`)
   // Platform drives the index filter — an unclassified project is unreachable there.
   check(p.platforms?.length > 0, `project ${p.id}: no platforms set`)
+  check(['work', 'personal'].includes(p.context), `project ${p.id}: context must be work or personal`)
   for (const pl of p.platforms ?? []) {
     check(['mobile', 'web', 'desktop'].includes(pl), `project ${p.id}: unknown platform "${pl}"`)
   }
@@ -64,6 +66,34 @@ for (const m of mini) {
   check(m.category !== 'others', `mini "${m.title}": the "others" category was removed`)
 }
 
+for (const e of experience) {
+  check(e.company && e.role && e.period, `experience "${e.id}": missing company, role or period`)
+}
+
+// Three projects have no repo and no in-app branding, so client-vs-personal
+// was inferred rather than established. Surface them instead of asserting.
+const assumed = projects.filter((p) => p.contextAssumed)
+if (assumed.length) {
+  console.warn(
+    `\n⚠  ${assumed.length} project${assumed.length === 1 ? '' : 's'} have an ASSUMED work/personal ` +
+    `classification (${assumed.map((p) => p.id).join(', ')}).\n` +
+    `   No repo or in-app branding confirmed it. Set "context" in src/data/projects.json\n` +
+    `   and remove "contextAssumed" once verified.\n`
+  )
+}
+
+// Warn, don't fail: Sakar asked for sample data so the layout could be reviewed.
+// Failing would block deploying the rest of the site.
+const placeholders = experience.filter((e) => e.placeholder)
+if (placeholders.length) {
+  console.warn(
+    `\n⚠  ${placeholders.length} placeholder experience entr${placeholders.length === 1 ? 'y is' : 'ies are'} ` +
+    `still present (${placeholders.map((e) => e.id).join(', ')}).\n` +
+    `   These render a visible notice on the page. Replace them in src/data/experience.json\n` +
+    `   and drop the "placeholder" flag before this is treated as a real work history.\n`
+  )
+}
+
 // Deploy-critical: losing either of these breaks the live site silently.
 check(existsSync(join(root, 'public/CNAME')), 'public/CNAME missing — custom domain would break')
 check(
@@ -78,5 +108,5 @@ if (fail.length) {
 }
 console.log(
   `✓ content verified — ${projects.length} projects, ${mini.length} mini, ` +
-  `${skills.length} skills, ${shotTotal} screenshots (×2 sizes)`
+  `${skills.length} skills, ${shotTotal} screenshots (×2 sizes), ${experience.length} roles`
 )

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { orderedProjects, PLATFORMS, platformCounts } from '../data'
+import { orderedProjects, PLATFORMS, platformCounts, CONTEXTS, contextCounts } from '../data'
 import { Reveal } from '../Reveal'
 import { StatusPill } from './Work'
 
@@ -11,17 +11,24 @@ import { StatusPill } from './Work'
 const INITIAL = 5
 
 export function ProjectIndex({ onOpen }) {
-  const [filter, setFilter] = useState('all')
+  const [context, setContext] = useState('all')
+  const [platform, setPlatform] = useState('all')
   const [expanded, setExpanded] = useState(false)
 
+  // Two independent axes, combined with AND. Kept as separate labelled groups
+  // rather than one mixed row — "Personal" and "Web app" answer different
+  // questions and shouldn't look interchangeable.
   const matching = useMemo(
-    () => (filter === 'all' ? orderedProjects : orderedProjects.filter((p) => p.platforms.includes(filter))),
-    [filter]
+    () =>
+      orderedProjects
+        .filter((p) => context === 'all' || p.context === context)
+        .filter((p) => platform === 'all' || p.platforms.includes(platform)),
+    [context, platform]
   )
 
-  // Changing the filter starts a new list — carrying "expanded" across would
+  // Either filter starts a new list — carrying "expanded" across would
   // silently show everything again.
-  useEffect(() => setExpanded(false), [filter])
+  useEffect(() => setExpanded(false), [context, platform])
 
   const shown = expanded ? matching : matching.slice(0, INITIAL)
   const hidden = matching.length - shown.length
@@ -36,21 +43,29 @@ export function ProjectIndex({ onOpen }) {
           </h2>
         </div>
 
-        <div role="group" aria-label="Filter projects by platform" className="flex flex-wrap gap-2">
-          <Chip active={filter === 'all'} onClick={() => setFilter('all')} count={orderedProjects.length}>
-            All
-          </Chip>
-          {PLATFORMS.map((p) => (
-            <Chip key={p.id} active={filter === p.id} onClick={() => setFilter(p.id)} count={platformCounts[p.id]}>
-              {p.label}
-            </Chip>
-          ))}
+        <div className="flex flex-col gap-4 md:items-end">
+          <FilterGroup
+            label="Type"
+            options={CONTEXTS}
+            counts={contextCounts}
+            total={orderedProjects.length}
+            value={context}
+            onChange={setContext}
+          />
+          <FilterGroup
+            label="Platform"
+            options={PLATFORMS}
+            counts={platformCounts}
+            total={orderedProjects.length}
+            value={platform}
+            onChange={setPlatform}
+          />
         </div>
       </div>
 
       <p aria-live="polite" className="label mt-6">
         Showing {shown.length} of {matching.length}
-        {filter !== 'all' && ` · filtered from ${orderedProjects.length}`}
+        {(context !== 'all' || platform !== 'all') && ` · filtered from ${orderedProjects.length}`}
       </p>
 
       <ul className="mt-4 border-t border-line">
@@ -82,6 +97,9 @@ export function ProjectIndex({ onOpen }) {
                     {p.title}
                   </h3>
                   <StatusPill shipped={p.shipped} />
+                  <span className="label rounded-full border border-line px-2 py-0.5">
+                    {p.contextLabel}
+                  </span>
                 </div>
 
                 <p className="label mt-1.5">{p.category}</p>
@@ -111,6 +129,18 @@ export function ProjectIndex({ onOpen }) {
         ))}
       </ul>
 
+      {matching.length === 0 && (
+        <p className="mt-10 text-muted">
+          No projects match that combination.{' '}
+          <button
+            onClick={() => { setContext('all'); setPlatform('all') }}
+            className="border-b border-accent text-fg hover:opacity-60"
+          >
+            Clear filters
+          </button>
+        </p>
+      )}
+
       {hidden > 0 && (
         <button
           onClick={() => setExpanded(true)}
@@ -131,6 +161,20 @@ export function ProjectIndex({ onOpen }) {
         </button>
       )}
     </section>
+  )
+}
+
+function FilterGroup({ label, options, counts, total, value, onChange }) {
+  return (
+    <div role="group" aria-label={`Filter projects by ${label.toLowerCase()}`} className="flex flex-wrap items-center gap-2">
+      <span className="label mr-1 w-full shrink-0 opacity-60 sm:w-20 md:text-right">{label}</span>
+      <Chip active={value === 'all'} onClick={() => onChange('all')} count={total}>All</Chip>
+      {options.map((o) => (
+        <Chip key={o.id} active={value === o.id} onClick={() => onChange(o.id)} count={counts[o.id]}>
+          {o.label}
+        </Chip>
+      ))}
+    </div>
   )
 }
 

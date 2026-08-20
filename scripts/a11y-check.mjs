@@ -53,16 +53,27 @@ await p.evaluate(() => {
 await new Promise((r) => setTimeout(r, 400))
 const after = await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)
 results['filter narrows the list'] = after > 0 && after < before
+// Two filter groups now, each with exactly one pressed chip.
 results['filter marks itself pressed'] = await p.evaluate(
-  () => [...document.querySelectorAll('#index [aria-pressed="true"]')].length === 1
+  () => [...document.querySelectorAll('#index [aria-pressed="true"]')].length === 2
+)
+
+// Type and Platform combine with AND.
+await p.evaluate(() => {
+  const chips = [...document.querySelectorAll('#index [aria-pressed]')]
+  chips.find((c) => c.textContent.includes('Client work')).click()
+})
+await new Promise((r) => setTimeout(r, 400))
+results['type + platform combine'] = await p.evaluate(
+  () => document.querySelectorAll('#index > ul > li').length === 1
 )
 
 // Progressive disclosure: 5 shown, "See all" reveals the rest.
 // Reset the filter first — the check above left "Desktop" selected.
 await p.evaluate(() => {
   const all = [...document.querySelectorAll('#index [aria-pressed]')]
-    .find((c) => c.textContent.trim().startsWith('All'))
-  all?.click()
+    .filter((c) => c.textContent.trim().startsWith('All'))
+  all.forEach((c) => c.click())
 })
 await new Promise((r) => setTimeout(r, 400))
 const initial = await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)

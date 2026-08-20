@@ -32,7 +32,8 @@
    "mobile",
    "web",
    "desktop"
-  ]
+  ],
+  "context": "work"
  },
  {
   "id": "Multi_Cloud",
@@ -70,7 +71,8 @@
   "platforms": [
    "mobile",
    "web"
-  ]
+  ],
+  "context": "work"
  },
  {
   "id": "sperium-lounge",
@@ -111,7 +113,8 @@
   "platforms": [
    "mobile",
    "web"
-  ]
+  ],
+  "context": "work"
  },
  {
   "id": "dairy_app",
@@ -169,7 +172,8 @@
   "platforms": [
    "mobile",
    "desktop"
-  ]
+  ],
+  "context": "personal"
  },
  {
   "id": "Todo_app",
@@ -224,7 +228,8 @@
   ],
   "platforms": [
    "mobile"
-  ]
+  ],
+  "context": "personal"
  },
  {
   "id": "fire-alert-app",
@@ -303,7 +308,8 @@
   "platforms": [
    "mobile",
    "web"
-  ]
+  ],
+  "context": "personal"
  },
  {
   "id": "portfolio",
@@ -328,7 +334,8 @@
   ],
   "platforms": [
    "web"
-  ]
+  ],
+  "context": "personal"
  },
  {
   "id": "Lms_app",
@@ -379,7 +386,9 @@
   "platforms": [
    "mobile",
    "web"
-  ]
+  ],
+  "context": "personal",
+  "contextAssumed": true
  },
  {
   "id": "skill_verify",
@@ -416,7 +425,9 @@
   ],
   "platforms": [
    "web"
-  ]
+  ],
+  "context": "personal",
+  "contextAssumed": true
  },
  {
   "id": "jhol-momo",
@@ -453,6 +464,8 @@
   ],
   "platforms": [
    "mobile"
-  ]
+  ],
+  "context": "personal",
+  "contextAssumed": true
  }
 ]

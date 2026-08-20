@@ -580,3 +580,55 @@ full-size image.
 The scroll assertion was **validated by reverting the fix and confirming it goes red**, then
 restoring. Two checks earlier in this project passed vacuously, so new assertions now get proven
 against the bug they claim to catch.
+
+
+## 21. Change log — experience section, work/personal axis
+
+**2026-08-20.**
+
+### Experience — "Worked on"
+
+New `#experience` section: period and location on the left, company, role, summary, highlights and
+stack on the right, with optional `projects` ids that render as buttons opening the matching case
+study. Data in `src/data/experience.json`.
+
+**The placeholder data is deliberately hard to ship.** Sakar asked for sample entries so the layout
+could be reviewed, with real data to follow. Fabricated employment history going live on a real
+person's portfolio is actively harmful, so entries carry `placeholder: true`, which:
+
+- renders a visible amber notice in the section naming the file to edit, and
+- prints a warning from `npm run verify` on every build.
+
+It **warns rather than fails** — failing would block deploying the rest of the site. Removing the
+flag removes both signals.
+
+### Client work vs personal
+
+Added a `context` field (`work` | `personal`), classified from evidence rather than assumption:
+
+| Basis | Projects |
+|---|---|
+| `nnine-tech` GitHub org | N9 Attendance, Sperium Lounge |
+| N9-branded in its own screenshots ("Powered by Nnine Solutions") | Multi Cloud |
+| `sacarsacar` personal repos | Dairy Management, Quick DO, Fire Alert |
+| Self-evidently personal | My Portfolio |
+| **No repo, no branding — assumed** | **LMS App, Verify Skills, Jhol Momo** |
+
+The three unknowns carry `contextAssumed: true` and are listed in a build warning. Guessing silently
+would have put wrong claims about who he worked for on a live CV.
+
+### Representation
+
+Two **separate labelled filter groups** — Type (All / Client work / Personal) and Platform (All /
+Mobile / Web / Desktop) — combined with AND, rather than one mixed row. "Personal" and "Web app"
+answer different questions and shouldn't look interchangeable. Each row also carries its context as
+a tag beside the status pill, so the distinction is legible without touching a filter.
+
+An AND filter can legitimately match nothing, so there's an empty state with a "Clear filters"
+action.
+
+### Checks
+
+16 assertions. New: two filter groups each keep exactly one chip pressed, and Type + Platform
+genuinely combine (Client work + Desktop → exactly N9 Attendance). Also fixed the "PLATFORM" label
+overrunning its 56px column into the chips.
