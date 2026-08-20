@@ -409,3 +409,39 @@ correctly under `vite preview` — `/`, textures, legacy archive, CV and CNAME a
 Brave), so the perf number is a bundle measurement, not a field one. Keyboard, reduced-motion and
 no-WebGL paths are verified by code and unit test, **not** by running them in a browser. Nothing is
 committed or pushed — the live site is still the old one.
+
+
+## 15. Status log — visual QA & delivery
+
+**2026-08-20 — complete, on branch `rebuild/3d-portfolio`.**
+
+Automated browser verification was unblocked by driving Brave through
+`puppeteer-core` (`scripts/shoot.mjs`, `scripts/a11y-check.mjs`) rather than waiting on Chrome.
+Screenshots across desktop/mobile × dark/light × four scroll positions, plus the reduced-motion and
+no-WebGL paths, surfaced five more real bugs:
+
+| Bug | Effect | Fix |
+|---|---|---|
+| Rail centred at the origin | **Headline and body copy sat on top of lit phone screens** — both unreadable, desktop and mobile | Responsive rail transform: pushed right ≥1024 px, lifted above the copy below 768 px |
+| No separation between canvas and copy | Text competed with whatever screenshot was behind it | Gradient scrim at `z-[1]`, direction switching with breakpoint |
+| Scrim first added at `z-[5]` | Dimmed the copy it was meant to protect | Moved to `z-[1]`; sticky copy raised to `z-20` explicitly |
+| `.label` defined outside any layer | Beat Tailwind's `text-*` utilities — "Hire me" rendered green-on-green | Moved into `@layer components` so utilities win |
+| Index grid used raw portrait textures | 9:19.5 shots at full column width rendered ~930 px tall each | `aspect-[4/5] object-cover object-top` |
+
+Also: mesh moved below the devices (it was crossing the screens as a stray hairline) and given
+per-project status nodes coloured by shipped/in-progress; light-mode device bodies darkened to
+`#AAB2B4` because they were washing into the background; sitemap namespace typo
+(`sitemap.org` → `sitemaps.org`) corrected; SEO/OG/Twitter metadata, `robots.txt` and `sitemap.xml`
+added.
+
+**Verified green:** dialog opens, focus trapped inside, Escape closes, skip link present, single
+`h1`, `main` landmark, every image has `alt`, no page errors in any configuration. `npm ci &&
+npm run build && npm run verify` passes from a clean install — the exact CI sequence.
+
+**Delivered:** committed as `d16b8fb` and pushed to `rebuild/3d-portfolio`. **Not merged to `main`,
+so the live site is untouched** — the Pages workflow only fires on `main`. Merging that branch is
+what deploys.
+
+**Genuinely still open:** Lighthouse field metrics (the 78 KB is a bundle measurement); a real
+low-end Android check; and Sakar's own judgement on the visual direction, which has had no human
+review yet.
