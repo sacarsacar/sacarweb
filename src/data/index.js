@@ -29,6 +29,12 @@ const full = (folder, name) => `/shots/full/${folder}/${name}.webp`
  */
 const isHeading = (s) => s.length < 44 && !/[.!?:]$/.test(s.trim())
 
+export const PLATFORMS = [
+  { id: 'mobile', label: 'Mobile app' },
+  { id: 'web', label: 'Web app' },
+  { id: 'desktop', label: 'Desktop' },
+]
+
 export const projects = rawProjects.map((p) => {
   const folder = folderOf(p.image)
   const gallery = folder ? (shots[folder] ?? []) : []
@@ -40,6 +46,10 @@ export const projects = rawProjects.map((p) => {
     ...p,
     folder,
     shipped: p.status === 'completed',
+    platforms: p.platforms ?? [],
+    platformLabels: (p.platforms ?? []).map(
+      (id) => PLATFORMS.find((x) => x.id === id)?.label ?? id
+    ),
     // Dart (and others) can appear on both sides — Sperium Lounge and Quick DO
     // use a Dart server. Dedupe here so no consumer has to.
     stack: [...new Set([...(p.frontend ?? []), ...(p.backend ?? [])].map(label))],
@@ -56,6 +66,12 @@ export const orderedProjects = [
   ...projects.filter((p) => p.shipped),
   ...projects.filter((p) => !p.shipped),
 ]
+
+/** How many projects sit in each platform bucket — drives the filter counts. */
+export const platformCounts = PLATFORMS.reduce((acc, { id }) => {
+  acc[id] = projects.filter((p) => p.platforms.includes(id)).length
+  return acc
+}, {})
 
 export const skills = rawSkills
 export const miniProjects = rawMini

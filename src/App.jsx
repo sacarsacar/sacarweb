@@ -2,9 +2,11 @@ import { lazy, Suspense, useState } from 'react'
 import { useTheme, useReducedMotion } from './useTheme'
 import { useScrollRail } from './useScrollRail'
 import { orderedProjects, profile } from './data'
-import { WorkPanel, StatusPill } from './sections/Work'
+import { WorkPanel } from './sections/Work'
 import { CaseStudy } from './sections/CaseStudy'
 import { Stack, Archive, Contact } from './sections/Rest'
+import { ProjectIndex } from './sections/Index'
+import { About } from './sections/About'
 
 // three.js is ~1MB. Split it out so text paints without waiting on WebGL.
 const Scene = lazy(() => import('./three/Scene').then((m) => ({ default: m.Scene })))
@@ -53,7 +55,8 @@ export default function App() {
                          border-b border-line/60 bg-bg/70 px-6 py-4 backdrop-blur-md md:px-14">
         <span className="label text-fg">SC</span>
         <nav className="flex items-center gap-5">
-          <a href="#archive" className="label hover:text-accent">Archive</a>
+          <a href="#index" className="label hidden hover:text-accent sm:inline">Work</a>
+          <a href="#about" className="label hidden hover:text-accent sm:inline">About</a>
           <a href="#contact" className="label hover:text-accent">Contact</a>
           <button
             onClick={toggle}
@@ -110,40 +113,9 @@ export default function App() {
         </div>
       </section>
 
-      {/* Always present, not just as a no-WebGL fallback: the rail reaches one project
-          at a time, so this is the only route that reaches all ten by keyboard. */}
-      <section id="index" className="relative z-10 border-t border-line bg-bg px-6 py-24 md:px-14">
-        <p className="label">All work</p>
-        <h2 className="mt-3 font-display text-4xl leading-[0.95] md:text-6xl">
-          Ten projects
-        </h2>
-        <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {orderedProjects.map((p) => (
-              <li key={p.id}>
-                <button
-                  onClick={() => setOpen(p)}
-                  aria-label={`Read the ${p.title} case study`}
-                  className="group w-full text-left"
-                >
-                  {/* Portrait phone shots are ~9:19.5 — at full column width they render
-                      almost a metre tall. Crop to a card and keep the app's header visible. */}
-                  <img
-                    src={p.texture}
-                    alt=""
-                    loading="lazy"
-                    className="aspect-[4/5] w-full rounded-xl border border-line bg-raised
-                               object-cover object-top transition-colors group-hover:border-accent"
-                  />
-                  <div className="mt-3 flex items-center gap-3">
-                    <StatusPill shipped={p.shipped} />
-                  </div>
-                  <h3 className="mt-1 font-display text-2xl">{p.title}</h3>
-                  <p className="label mt-1">{p.category}</p>
-                </button>
-              </li>
-            ))}
-        </ul>
-      </section>
+      <ProjectIndex onOpen={setOpen} />
+
+      <About />
 
       <Stack />
       <Archive />

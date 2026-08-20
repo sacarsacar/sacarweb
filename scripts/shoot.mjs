@@ -9,10 +9,15 @@ const BRAVE = '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser'
 mkdirSync(OUT, { recursive: true })
 
 const VIEWS = [
-  { name: 'desktop', width: 1440, height: 900 },
+  { name: 'xs', width: 360, height: 740, isMobile: true, hasTouch: true },
   { name: 'mobile', width: 390, height: 844, isMobile: true, hasTouch: true },
+  { name: 'tablet', width: 768, height: 1024, hasTouch: true },
+  { name: 'laptop', width: 1024, height: 768 },
+  { name: 'desktop', width: 1440, height: 900 },
+  { name: 'wide', width: 2560, height: 1440 },
 ]
-const SCROLLS = [0, 0.10, 0.5, 0.97]
+const SCROLLS = process.env.SCROLLS?.split(',').map(Number) ?? [0, 0.1, 0.5, 0.97]
+const THEMES = process.env.THEMES?.split(',') ?? ['dark', 'light']
 
 const browser = await puppeteer.launch({
   executablePath: BRAVE,
@@ -22,7 +27,7 @@ const browser = await puppeteer.launch({
 
 const errors = []
 for (const view of VIEWS) {
-  for (const theme of ['dark', 'light']) {
+  for (const theme of THEMES) {
     const page = await browser.newPage()
     await page.setViewport(view)
     page.on('console', (m) => { if (m.type() === 'error') errors.push(`[${view.name}/${theme}] ${m.text()}`) })
@@ -38,6 +43,10 @@ for (const view of VIEWS) {
       await new Promise((r) => setTimeout(r, 1400))
       await page.screenshot({ path: `${OUT}/${view.name}-${theme}-${Math.round(s * 100)}.png` })
     }
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth
+    )
+    if (overflow > 1) errors.push(`[${view.name}/${theme}] HORIZONTAL OVERFLOW ${overflow}px`)
     await page.close()
   }
 }

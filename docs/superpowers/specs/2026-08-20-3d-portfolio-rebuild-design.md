@@ -454,3 +454,33 @@ Form, Calendar, Card Hover, Hover Effect, Skill Bar. Deleted from `src/data/mini
 rather than filtered at render, so nothing downstream can surface them; `scripts/verify-content.mjs`
 now expects 15 and asserts no entry carries `category: "others"`. Archive is Tools (10) and Games
 (5). Section copy updated from "Twenty-two" to "Fifteen".
+
+
+## 17. Change log — About, platform categories, responsive pass
+
+**2026-08-20.**
+
+**Photo + About.** New `#about` section: portrait (3:4, intrinsic size declared so there's no layout
+shift), an "Available" node echoing the rail, the rewritten bio, and a stat row of things that are
+actually countable — 10 projects, 6 shipped, 29 technologies, 1 on the Play Store. No invented
+scores, consistent with §12.
+
+**Platform categories.** Added a `platforms` field to every project, derived from what the project
+copy actually claims rather than inferred from the stack (N9 names Web/Android/iOS/Windows/macOS;
+Dairy names Windows + Android; Sperium has a Flutter admin app plus a customer web app). Counts:
+mobile 8, web 7, desktop 2. CI now fails if a project has no platform or an unknown one — an
+unclassified project would be invisible under a filter.
+
+**Projects redesigned as a catalogue.** The card grid became a dense filterable index: one scannable
+row per project carrying index number, thumbnail, title, status, platform chips and full stack,
+collapsing to a stacked card under 768 px. Filter chips carry live counts and an `aria-live` result
+count. This replaces the old grid entirely and remains the only route that reaches all ten by
+keyboard.
+
+**Responsive pass.** Screenshot sweep widened to six breakpoints — 360, 390, 768, 1024, 1440,
+2560 — with an automated horizontal-overflow assertion at each. Two fixes: the About stat row
+collided at 768 px (4 narrow columns; now 2-up until `lg`), and the photo carried a wrong intrinsic
+height (`640×640` for a `640×853` image), which would have caused layout shift.
+
+**Checks added.** `scripts/a11y-check.mjs` now also asserts the platform filter narrows the list
+across a re-render and marks exactly one chip `aria-pressed`. Nine assertions, all green.

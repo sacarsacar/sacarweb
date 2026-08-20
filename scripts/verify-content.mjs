@@ -28,6 +28,11 @@ for (const p of projects) {
   check(p.category, `project ${p.id}: missing category`)
   check(['completed', 'in-progress'].includes(p.status), `project ${p.id}: bad status "${p.status}"`)
   check(p.frontend?.length > 0, `project ${p.id}: no frontend stack`)
+  // Platform drives the index filter — an unclassified project is unreachable there.
+  check(p.platforms?.length > 0, `project ${p.id}: no platforms set`)
+  for (const pl of p.platforms ?? []) {
+    check(['mobile', 'web', 'desktop'].includes(pl), `project ${p.id}: unknown platform "${pl}"`)
+  }
   check(p.summary || p.details?.length, `project ${p.id}: no written content`)
 
   // Every project must have a texture that actually exists on disk.
