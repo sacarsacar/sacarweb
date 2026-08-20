@@ -75,6 +75,25 @@ body {
 /* The dialog takes focus when shown, but focus moves straight to Close — the
    container ring is just a stray box around the whole panel. */
 dialog:focus, dialog:focus-visible, dialog > div:focus, dialog > div:focus-visible { outline: none; }
+/* Scroll cue: a travelling highlight down a hairline. */
+.scroll-cue { position: relative; overflow: hidden; }
+.scroll-cue::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: 40%;
+  background: var(--accent);
+  animation: cue 2.2s ease-in-out infinite;
+}
+@keyframes cue {
+  0%   { top: -40%; opacity: 0; }
+  35%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue::after { animation: none; top: 0; opacity: .5; }
+}
+
 .skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; background: var(--accent); color: var(--bg); padding: .75rem 1.25rem; }
 .skip-link:focus { left: 0; }
 

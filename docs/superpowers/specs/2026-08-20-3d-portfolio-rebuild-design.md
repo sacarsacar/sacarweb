@@ -484,3 +484,30 @@ height (`640×640` for a `640×853` image), which would have caused layout shift
 
 **Checks added.** `scripts/a11y-check.mjs` now also asserts the platform filter narrows the list
 across a re-render and marks exactly one chip `aria-pressed`. Nine assertions, all green.
+
+
+## 18. Change log — hero balance, progressive disclosure
+
+**2026-08-20.**
+
+**Hero alignment.** The copy was pinned to the bottom of a full-height box, leaving the top half
+empty against devices sitting centre-right — a lopsided diagonal, and a large dead gap under the
+nav. Now centred on desktop. Centring it everywhere immediately broke mobile, where the devices are
+lifted to the top and the copy landed on top of them, so the alignment is per-breakpoint:
+`justify-end` below `md`, `justify-center` above.
+
+**Scroll cue.** The rail is scroll-driven and nothing said so — ten projects sat behind an
+interaction nobody knew existed. A hairline with a travelling highlight plus
+"Scroll · 10 projects" now fills what was dead space, and it also gives the hero's lower half a
+job. Animation disabled under `prefers-reduced-motion`.
+
+**Progressive disclosure.** The index shows **5 projects**, with "See all 10 projects +5" revealing
+the rest and "Show fewer" collapsing again. Changing the platform filter resets expansion — carrying
+it across would silently show everything under the new filter. The `aria-live` count reports both
+the visible count and, when filtered, what it was filtered from.
+
+**Checks.** Two more assertions: the index starts collapsed at 5, and "See all" reveals all ten.
+Eleven total, all green. Two of the failures during this pass were **my checks, not the product** —
+`#index li` was also counting the platform chips nested inside each row (5 rows + 8 chips = 13), and
+the expansion check inherited the "Desktop" filter left selected by the check before it. Both
+selectors tightened.

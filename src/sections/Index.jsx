@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { orderedProjects, PLATFORMS, platformCounts } from '../data'
 import { StatusPill } from './Work'
 
@@ -7,13 +7,23 @@ import { StatusPill } from './Work'
  * carrying platform, status and stack at a glance. Collapses to a stacked card
  * under 768px. This is also the only route that reaches all ten by keyboard.
  */
+const INITIAL = 5
+
 export function ProjectIndex({ onOpen }) {
   const [filter, setFilter] = useState('all')
+  const [expanded, setExpanded] = useState(false)
 
-  const shown = useMemo(
+  const matching = useMemo(
     () => (filter === 'all' ? orderedProjects : orderedProjects.filter((p) => p.platforms.includes(filter))),
     [filter]
   )
+
+  // Changing the filter starts a new list — carrying "expanded" across would
+  // silently show everything again.
+  useEffect(() => setExpanded(false), [filter])
+
+  const shown = expanded ? matching : matching.slice(0, INITIAL)
+  const hidden = matching.length - shown.length
 
   return (
     <section id="index" className="relative z-10 border-t border-line bg-bg px-5 py-20 sm:px-6 md:px-10 lg:px-14 md:py-28">
@@ -38,7 +48,8 @@ export function ProjectIndex({ onOpen }) {
       </div>
 
       <p aria-live="polite" className="label mt-6">
-        Showing {shown.length} of {orderedProjects.length}
+        Showing {shown.length} of {matching.length}
+        {filter !== 'all' && ` · filtered from ${orderedProjects.length}`}
       </p>
 
       <ul className="mt-4 border-t border-line">
@@ -97,6 +108,26 @@ export function ProjectIndex({ onOpen }) {
           </li>
         ))}
       </ul>
+
+      {hidden > 0 && (
+        <button
+          onClick={() => setExpanded(true)}
+          className="label mt-8 rounded-full border border-line px-5 py-3
+                     hover:border-accent hover:text-accent"
+        >
+          See all {matching.length} projects
+          <span className="ml-2 opacity-50">+{hidden}</span>
+        </button>
+      )}
+      {expanded && matching.length > INITIAL && (
+        <button
+          onClick={() => setExpanded(false)}
+          className="label mt-8 rounded-full border border-line px-5 py-3
+                     hover:border-accent hover:text-accent"
+        >
+          Show fewer
+        </button>
+      )}
     </section>
   )
 }

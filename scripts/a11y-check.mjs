@@ -18,7 +18,7 @@ await p.goto(URL, { waitUntil: 'networkidle2' })
 await new Promise((r) => setTimeout(r, 2000))
 
 const results = {}
-await p.evaluate(() => document.querySelector('#index li button').click())
+await p.evaluate(() => document.querySelector('#index > ul > li button').click())
 await new Promise((r) => setTimeout(r, 1200))
 results['dialog opens'] = await p.evaluate(() => !!document.querySelector('dialog')?.open)
 results['focus trapped inside'] = await p.evaluate(
@@ -32,17 +32,35 @@ results['Escape closes'] = await p.evaluate(() => !document.querySelector('dialo
 
 // Platform filter: picking "Desktop" must narrow the list, not empty or ignore it.
 // Count across a re-render — React has not committed by the end of the click tick.
-const before = await p.evaluate(() => document.querySelectorAll('#index li').length)
+const before = await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)
 await p.evaluate(() => {
   const chips = [...document.querySelectorAll('#index [aria-pressed]')]
   chips.find((c) => c.textContent.includes('Desktop')).click()
 })
 await new Promise((r) => setTimeout(r, 400))
-const after = await p.evaluate(() => document.querySelectorAll('#index li').length)
+const after = await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)
 results['filter narrows the list'] = after > 0 && after < before
 results['filter marks itself pressed'] = await p.evaluate(
   () => [...document.querySelectorAll('#index [aria-pressed="true"]')].length === 1
 )
+
+// Progressive disclosure: 5 shown, "See all" reveals the rest.
+// Reset the filter first — the check above left "Desktop" selected.
+await p.evaluate(() => {
+  const all = [...document.querySelectorAll('#index [aria-pressed]')]
+    .find((c) => c.textContent.trim().startsWith('All'))
+  all?.click()
+})
+await new Promise((r) => setTimeout(r, 400))
+const initial = await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)
+results['starts collapsed at 5'] = initial === 5
+await p.evaluate(() => {
+  const b = [...document.querySelectorAll('#index button')].find((x) => /See all/.test(x.textContent))
+  b?.click()
+})
+await new Promise((r) => setTimeout(r, 400))
+results['See all reveals the rest'] =
+  (await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)) === 10
 
 results['skip link is first tab stop'] = await p.evaluate(() => {
   document.body.focus()

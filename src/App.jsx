@@ -81,7 +81,7 @@ export default function App() {
            screen so reduced-motion visitors don't traverse ten empty ones. */
         style={{ height: showRail ? `${orderedProjects.length * 100}dvh` : '100dvh' }}
       >
-        <div className="pointer-events-none sticky top-0 z-20 flex h-dvh flex-col justify-end px-6 pb-16 md:px-14 md:pb-20">
+        <div className="pointer-events-none sticky top-0 z-20 flex h-dvh flex-col justify-end px-5 pb-20 pt-16 sm:px-6 md:justify-center md:px-10 md:pb-28 lg:px-14">
           <div
             inert={engage > 0.5}
             className="pointer-events-none relative z-10 transition-opacity duration-500"
@@ -92,9 +92,16 @@ export default function App() {
               SAKAR<br />CHAULAGAIN
             </h1>
             <p className="mt-5 max-w-md text-lg text-muted">{profile.thesis}</p>
-            <div className="pointer-events-auto mt-7 flex gap-3">
-              <a href={profile.cv} className="label rounded-full border border-line px-4 py-2 hover:border-accent hover:text-accent">Résumé</a>
-              <a href="#contact" className="label rounded-full bg-accent px-4 py-2 text-bg hover:opacity-80">Hire me</a>
+            <div className="pointer-events-auto mt-7 flex flex-wrap gap-3">
+              <a href={profile.cv} className="label rounded-full border border-line px-4 py-2.5 hover:border-accent hover:text-accent">Résumé</a>
+              <a href="#contact" className="label rounded-full bg-accent px-4 py-2.5 text-bg hover:opacity-80">Hire me</a>
+            </div>
+
+            {/* The rail is scroll-driven, so say so — otherwise ten projects sit
+                behind an interaction nobody knows is there. */}
+            <div className="mt-12 flex items-center gap-3">
+              <span className="scroll-cue h-8 w-px bg-line" aria-hidden />
+              <span className="label">Scroll · {orderedProjects.length} projects</span>
             </div>
           </div>
 
