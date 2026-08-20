@@ -35,7 +35,7 @@ export function Stack() {
 }
 
 export function Archive() {
-  const order = ['tools', 'games', 'others']
+  const order = ['tools', 'games']
   return (
     <section id="archive" className="relative z-10 border-t border-line bg-bg px-6 py-24 md:px-14">
       <p className="label">Playground · 2022—2023</p>
@@ -43,7 +43,7 @@ export function Archive() {
         Early work
       </h2>
       <p className="mt-4 max-w-lg text-muted">
-        Twenty-two small things built while learning the web. All still live.
+        Fifteen small things built while learning the web. All still live.
       </p>
 
       {order.filter((c) => miniByCategory[c]).map((cat) => (

@@ -20,7 +20,7 @@ const mini = read('src/data/mini-projects.json')
 const skills = read('src/data/skills.json')
 
 check(projects.length === 10, `expected 10 projects, got ${projects.length}`)
-check(mini.length === 22, `expected 22 mini projects, got ${mini.length}`)
+check(mini.length === 15, `expected 15 mini projects, got ${mini.length}`)
 check(skills.length === 29, `expected 29 skills, got ${skills.length}`)
 
 for (const p of projects) {
@@ -56,6 +56,7 @@ for (const [folder, names] of Object.entries(shots)) {
 
 for (const m of mini) {
   check(/^https?:\/\//.test(m.url), `mini "${m.title}": bad url ${m.url}`)
+  check(m.category !== 'others', `mini "${m.title}": the "others" category was removed`)
 }
 
 // Deploy-critical: losing either of these breaks the live site silently.

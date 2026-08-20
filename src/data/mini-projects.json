@@ -1,134 +1,92 @@
 [
-  {
-    "title": "Tic Tac Toe",
-    "category": "games",
-    "url": "https://tictactoegamebysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/tictactoe.png"
-  },
-  {
-    "title": "Expense Tracker",
-    "category": "tools",
-    "url": "https://expensetrackerbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/ExpenseTracker.png"
-  },
-  {
-    "title": "Number Guessing Game",
-    "category": "games",
-    "url": "https://numberguessinggamebysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/NumberGuessing.png"
-  },
-  {
-    "title": "Clock",
-    "category": "others",
-    "url": "https://clockbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/Clock.png"
-  },
-  {
-    "title": "Age Calculator",
-    "category": "tools",
-    "url": "https://agecalculatorbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/AgeCalculator.png"
-  },
-  {
-    "title": "Password Generator",
-    "category": "tools",
-    "url": "https://passwordgeneratorbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/PasswordGenerator.png"
-  },
-  {
-    "title": "Alarm Clock",
-    "category": "tools",
-    "url": "https://alarmbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/AlarmClock.png"
-  },
-  {
-    "title": "To_Do_List",
-    "category": "tools",
-    "url": "https://todolistbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/ToDoList.png"
-  },
-  {
-    "title": "Weight Converter",
-    "category": "tools",
-    "url": "https://weightconverterbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/WeightConverter.png"
-  },
-  {
-    "title": "Card Flip",
-    "category": "games",
-    "url": "https://cardflipgamebysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/CardFlipGame.png"
-  },
-  {
-    "title": "Rock Paper Scissors",
-    "category": "games",
-    "url": "https://srpgamebysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/RockPaperScissorsGame.png"
-  },
-  {
-    "title": "Calculator",
-    "category": "tools",
-    "url": "https://calculatorbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/Calculator.png"
-  },
-  {
-    "title": "Snake Game",
-    "category": "games",
-    "url": "https://snakegamebysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/SnakeGame.png"
-  },
-  {
-    "title": "Filterable Gallery",
-    "category": "others",
-    "url": "https://gallarybysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/Filterable Gallary.png"
-  },
-  {
-    "title": "Stop Watch & Text to Speech",
-    "category": "tools",
-    "url": "https://miniprojectsbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/StopWatch_Speech.png"
-  },
-  {
-    "title": "Counter",
-    "category": "tools",
-    "url": "https://numbercounterbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/Counter.png"
-  },
-  {
-    "title": "Login Form",
-    "category": "others",
-    "url": "https://loginformbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/LoginForm.png"
-  },
-  {
-    "title": "Captcha Generator",
-    "category": "tools",
-    "url": "https://captchageneratorbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/CaptchaGenerator.png"
-  },
-  {
-    "title": "Calendar",
-    "category": "others",
-    "url": "https://calenderbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/Calender.png"
-  },
-  {
-    "title": "Card Hover",
-    "category": "others",
-    "url": "https://cardhoverbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/CardHover.png"
-  },
-  {
-    "title": "Hover Effect",
-    "category": "others",
-    "url": "https://hovereffectbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/HoverEffect.png"
-  },
-  {
-    "title": "Skill Bar",
-    "category": "others",
-    "url": "https://skillbarbysakar.netlify.app/",
-    "image": "Projects/Html_Css&JS/assets/img/SkillBar.png"
-  }
+ {
+  "title": "Tic Tac Toe",
+  "category": "games",
+  "url": "https://tictactoegamebysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/tictactoe.png"
+ },
+ {
+  "title": "Expense Tracker",
+  "category": "tools",
+  "url": "https://expensetrackerbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/ExpenseTracker.png"
+ },
+ {
+  "title": "Number Guessing Game",
+  "category": "games",
+  "url": "https://numberguessinggamebysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/NumberGuessing.png"
+ },
+ {
+  "title": "Age Calculator",
+  "category": "tools",
+  "url": "https://agecalculatorbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/AgeCalculator.png"
+ },
+ {
+  "title": "Password Generator",
+  "category": "tools",
+  "url": "https://passwordgeneratorbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/PasswordGenerator.png"
+ },
+ {
+  "title": "Alarm Clock",
+  "category": "tools",
+  "url": "https://alarmbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/AlarmClock.png"
+ },
+ {
+  "title": "To_Do_List",
+  "category": "tools",
+  "url": "https://todolistbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/ToDoList.png"
+ },
+ {
+  "title": "Weight Converter",
+  "category": "tools",
+  "url": "https://weightconverterbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/WeightConverter.png"
+ },
+ {
+  "title": "Card Flip",
+  "category": "games",
+  "url": "https://cardflipgamebysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/CardFlipGame.png"
+ },
+ {
+  "title": "Rock Paper Scissors",
+  "category": "games",
+  "url": "https://srpgamebysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/RockPaperScissorsGame.png"
+ },
+ {
+  "title": "Calculator",
+  "category": "tools",
+  "url": "https://calculatorbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/Calculator.png"
+ },
+ {
+  "title": "Snake Game",
+  "category": "games",
+  "url": "https://snakegamebysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/SnakeGame.png"
+ },
+ {
+  "title": "Stop Watch & Text to Speech",
+  "category": "tools",
+  "url": "https://miniprojectsbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/StopWatch_Speech.png"
+ },
+ {
+  "title": "Counter",
+  "category": "tools",
+  "url": "https://numbercounterbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/Counter.png"
+ },
+ {
+  "title": "Captcha Generator",
+  "category": "tools",
+  "url": "https://captchageneratorbysakar.netlify.app/",
+  "image": "Projects/Html_Css&JS/assets/img/CaptchaGenerator.png"
+ }
 ]

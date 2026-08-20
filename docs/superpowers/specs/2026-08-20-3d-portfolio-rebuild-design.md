@@ -141,7 +141,7 @@ as-is:
 |---|---|
 | `docs/data/projects.json` | 10 projects — id, title, category, status, image, github/live, `frontend[]`, `backend[]`, summary, multi-paragraph `details[]` |
 | `docs/data/skills.json` | 29 skills — name, tagline, brand colour |
-| `docs/data/mini-projects.json` | 22 mini projects — title, category (`games`/`tools`/`others`), live URL, local screenshot |
+| `src/data/mini-projects.json` | 15 mini projects — title, category (`games`/`tools`/`others`), live URL, local screenshot |
 
 ### The 10 projects
 
@@ -168,7 +168,7 @@ fake bars: it shows *what* he works with, not an invented score for how well.
 > Node.js · Express · PostgreSQL · MongoDB · SQLite · Hive · Firebase · Supabase · Docker · Auth0 ·
 > Socket.io · OpenAI · Tailwind · Vite · Figma · Vue.js · Chakra UI · React Query · Spline
 
-### Archive — 22 mini-projects
+### Archive — 15 mini-projects
 
 Framed as **early work / playground**, visually separate from the shipped apps and deliberately
 understated — a footnote to the real work, not a rival to it. Games / tools / others filter carried
@@ -445,3 +445,12 @@ what deploys.
 **Genuinely still open:** Lighthouse field metrics (the 78 KB is a bundle measurement); a real
 low-end Android check; and Sakar's own judgement on the visual direction, which has had no human
 review yet.
+
+
+## 16. Change log — archive trimmed
+
+**2026-08-20.** The archive's `others` category removed on request: Clock, Filterable Gallery, Login
+Form, Calendar, Card Hover, Hover Effect, Skill Bar. Deleted from `src/data/mini-projects.json`
+rather than filtered at render, so nothing downstream can surface them; `scripts/verify-content.mjs`
+now expects 15 and asserts no entry carries `category: "others"`. Archive is Tools (10) and Games
+(5). Section copy updated from "Twenty-two" to "Fifteen".
