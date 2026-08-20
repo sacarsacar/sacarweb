@@ -122,6 +122,43 @@ dialog[open]::backdrop { background: rgb(0 0 0 / .72); backdrop-filter: blur(6px
   dialog[open]::backdrop { background: rgb(0 0 0 / 0); backdrop-filter: blur(0px); }
 }
 
+/* ---- Portrait -------------------------------------------------------
+   The photo as a node on the mesh, not a framed square.
+---------------------------------------------------------------------- */
+.portrait {
+  /* Arch: rounded crown, squared base. Reads as a considered shape rather
+     than a default radius, and follows the head. */
+  border-radius: 48% 48% 1.25rem 1.25rem / 34% 34% 1.25rem 1.25rem;
+}
+
+/* Dot field behind the portrait — the same "local network" motif as the rail. */
+.portrait-field {
+  background-image: radial-gradient(var(--fg-muted) 1px, transparent 1px);
+  opacity: .28;
+  background-size: 14px 14px;
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 35%, transparent 72%);
+}
+
+/* Signal rings ping outward from the availability node. */
+.ping { position: absolute; inset: 0; border-radius: 999px; border: 1px solid var(--live); }
+.ping-1 { animation: ping 2.8s cubic-bezier(0, 0, .2, 1) infinite; }
+.ping-2 { animation: ping 2.8s cubic-bezier(0, 0, .2, 1) .9s infinite; }
+@keyframes ping {
+  0%   { transform: scale(1);   opacity: .7; }
+  70%  { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* Viewfinder brackets, drawn in on reveal. */
+.bracket { position: absolute; width: 22px; height: 22px; border-color: var(--accent); opacity: .55; }
+
+.tilt { transition: transform .5s var(--ease); transform-style: preserve-3d; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ping { animation: none !important; opacity: 0 !important; }
+  .tilt { transform: none !important; }
+}
+
 /* Scroll cue: a travelling highlight down a hairline. */
 .scroll-cue { position: relative; overflow: hidden; }
 .scroll-cue::after {

@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { profile, projects, skills } from '../data'
 import { Reveal } from '../Reveal'
 
@@ -11,25 +12,8 @@ export function About() {
       className="relative z-10 border-t border-line bg-bg px-5 py-20 sm:px-6 md:px-10 md:py-28 lg:px-14"
     >
       <div className="grid items-start gap-10 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] md:gap-14 lg:gap-20">
-        <Reveal as="figure" className="mx-auto w-48 sm:w-56 md:mx-0 md:w-full">
-          <div className="relative">
-            <img
-              src="/me.webp"
-              alt="Sakar Chaulagain"
-              width="640"
-              height="853"
-              className="aspect-[3/4] w-full rounded-2xl border border-line bg-raised object-cover"
-            />
-            {/* Connection node, echoing the rail. */}
-            <span
-              aria-hidden
-              className="absolute -bottom-2 -right-2 flex items-center gap-1.5 rounded-full
-                         border border-line bg-bg px-2.5 py-1.5"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-live" />
-              <span className="label text-fg">Available</span>
-            </span>
-          </div>
+        <Reveal as="figure" className="mx-auto w-56 sm:w-64 md:mx-0 md:w-full">
+          <Portrait />
         </Reveal>
 
         <Reveal delay={120}>
@@ -76,6 +60,73 @@ export function About() {
         </Reveal>
       </div>
     </section>
+  )
+}
+
+/** Photo as a node on the mesh: arch mask, dot field, signal rings, cursor tilt. */
+function Portrait() {
+  const ref = useRef(null)
+  const [tilt, setTilt] = useState(null)
+
+  const onMove = (e) => {
+    const el = ref.current
+    if (!el) return
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const r = el.getBoundingClientRect()
+    const x = (e.clientX - r.left) / r.width - 0.5
+    const y = (e.clientY - r.top) / r.height - 0.5
+    setTilt({ x, y })
+  }
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={() => setTilt(null)}
+      className="relative [perspective:900px]"
+    >
+      {/* Dot field, echoing the rail's mesh. */}
+      <div aria-hidden className="portrait-field pointer-events-none absolute -inset-6 md:-inset-8" />
+
+      <div
+        className="tilt relative"
+        style={
+          tilt
+            ? { transform: `rotateX(${-tilt.y * 7}deg) rotateY(${tilt.x * 9}deg) translateZ(0)` }
+            : undefined
+        }
+      >
+        {/* Accent shadow-plate, offset so the portrait reads as lifted off the page. */}
+        <div
+          aria-hidden
+          className="portrait absolute inset-0 translate-x-2 translate-y-2 border border-accent/35"
+        />
+
+        <img
+          src="/me.webp"
+          alt="Sakar Chaulagain"
+          width="640"
+          height="853"
+          className="portrait relative aspect-[3/4] w-full border border-line bg-raised object-cover"
+        />
+
+        <span aria-hidden className="bracket absolute -left-2 -top-2 border-l border-t" />
+        <span aria-hidden className="bracket absolute -right-2 -top-2 border-r border-t" />
+        <span aria-hidden className="bracket absolute -bottom-2 -left-2 border-b border-l" />
+        <span aria-hidden className="bracket absolute -bottom-2 -right-2 border-b border-r" />
+
+        {/* Availability node — the rings are the same signal idea as the rail. */}
+        <span className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2
+                         rounded-full border border-line bg-bg px-3 py-1.5 md:left-auto md:right-2 md:translate-x-0">
+          <span className="relative flex h-1.5 w-1.5">
+            <span aria-hidden className="ping ping-1" />
+            <span aria-hidden className="ping ping-2" />
+            <span className="relative h-1.5 w-1.5 rounded-full bg-live" />
+          </span>
+          <span className="label text-fg">Available</span>
+        </span>
+      </div>
+    </div>
   )
 }
 

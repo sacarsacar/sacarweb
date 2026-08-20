@@ -632,3 +632,25 @@ action.
 16 assertions. New: two filter groups each keep exactly one chip pressed, and Type + Platform
 genuinely combine (Client work + Desktop → exactly N9 Attendance). Also fixed the "PLATFORM" label
 overrunning its 56px column into the chips.
+
+
+## 22. Change log — portrait redesign
+
+**2026-08-20.** The About photo was a plain rounded square. Rebuilt as a **node on the mesh**, using
+the same vocabulary as the device rail rather than inventing a separate decorative language:
+
+- **Arch mask** (`48% 48% 1.25rem 1.25rem / 34% 34%`) — rounded crown, squared base, following the
+  head. A considered shape rather than a default radius or a circle.
+- **Dot field** behind it, radially masked — the local-network motif that runs through the rail.
+- **Signal rings** pulsing from the availability node, two offset by 0.9s. Same idea as the rail's
+  status nodes: connection, not decoration.
+- **Viewfinder brackets** at the corners, instrument-panel framing consistent with `.label`.
+- **Offset accent plate** behind the photo so it reads as lifted off the page.
+- **Cursor tilt** — a small `rotateX/rotateY` on pointer position, eased on the shared curve, with an
+  explicit `prefers-reduced-motion` bail-out inside the handler as well as in CSS.
+
+Two fixes on review: the dot field used `--line`, which sits about 2% off the background and never
+rendered — switched to `--fg-muted` at 28% opacity. And the figcaption duplicated both the `alt`
+text and the bio's opening line while wrapping badly, so it was cut.
+
+Ping and tilt are both disabled under `prefers-reduced-motion`.
