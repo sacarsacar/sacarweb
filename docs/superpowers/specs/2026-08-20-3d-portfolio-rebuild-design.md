@@ -552,3 +552,31 @@ permanently, which is the one failure mode here that is worse than no animation.
 all green.
 
 **Cost:** first paint 76 → **83 KB gzip**, against the 500 KB budget.
+
+
+## 20. Change log — case study scroll + width
+
+**2026-08-20.** Two bugs reported from use:
+
+**It didn't scroll.** Lenis captures wheel events on the document, so the dialog's own
+`overflow-y-auto` container never received them — the case study was effectively frozen at the top,
+with most of the write-up unreachable. Fixed with `data-lenis-prevent` on the scroller (plus
+`overscroll-contain`). This was a regression introduced by the motion pass in §19: the dialog
+scrolled fine before Lenis existed. Adding smooth scroll silently broke every nested scroll area,
+which is the standard failure mode of scroll-hijacking libraries and should have been checked then.
+
+**It ignored the viewport.** The content was locked to `max-w-3xl` (768px), so on a 1440px screen
+roughly half the width sat empty. Rebuilt as a full-width layout: sticky header bar, then a
+`minmax(0,20rem) / minmax(0,1fr)` grid — meta (platforms, frontend, backend, links) stays in view on
+the left while the write-up scrolls past — capped at `110rem` with responsive padding. The gallery
+now goes 2 → 3 → 4 → 5 columns instead of a fixed 3 in a narrow column, and each screen links to the
+full-size image.
+
+**Checks.** Two more assertions, 14 total:
+- `case study scrolls on wheel` — a real `page.mouse.wheel()` rather than a `scrollTop` assignment,
+  because assigning `scrollTop` would have passed against the actual bug.
+- `case study uses the width` — the title must measure over 1000px on a 1440px viewport.
+
+The scroll assertion was **validated by reverting the fix and confirming it goes red**, then
+restoring. Two checks earlier in this project passed vacuously, so new assertions now get proven
+against the bug they claim to catch.

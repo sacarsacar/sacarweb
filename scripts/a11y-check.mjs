@@ -24,6 +24,19 @@ results['dialog opens'] = await p.evaluate(() => !!document.querySelector('dialo
 results['focus trapped inside'] = await p.evaluate(
   () => document.querySelector('dialog')?.contains(document.activeElement)
 )
+// Real wheel event, not a scrollTop assignment: the bug was Lenis capturing
+// wheel on the document so the dialog's own scroller never saw it.
+await p.mouse.move(700, 500)
+await p.mouse.wheel({ deltaY: 600 })
+await new Promise((r) => setTimeout(r, 500))
+results['case study scrolls on wheel'] = await p.evaluate(
+  () => (document.querySelector('dialog [data-lenis-prevent]')?.scrollTop ?? 0) > 50
+)
+// Width: on a 1440px viewport the content must not be boxed into a narrow column.
+results['case study uses the width'] = await p.evaluate(() => {
+  const el = document.querySelector('dialog h2')
+  return el ? el.getBoundingClientRect().width > 1000 : false
+})
 await p.screenshot({ path: `${OUT}/dialog.png` })
 
 await p.keyboard.press('Escape')
