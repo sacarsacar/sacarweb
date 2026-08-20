@@ -1,0 +1,147 @@
+[
+  {
+    "name": "Flutter",
+    "tagline": "Build once. Run everywhere.",
+    "color": "#47C5FB"
+  },
+  {
+    "name": "JavaScript",
+    "tagline": "The web's favorite language.",
+    "color": "#f0db4f"
+  },
+  {
+    "name": "HTML",
+    "tagline": "The web starts here.",
+    "color": "#e34c26"
+  },
+  {
+    "name": "CSS",
+    "tagline": "Style that speaks.",
+    "color": "#1572B6"
+  },
+  {
+    "name": "React",
+    "tagline": "UI made simple.",
+    "color": "#61dafb"
+  },
+  {
+    "name": "Dart",
+    "tagline": "Fast. Clean. Sharp.",
+    "color": "#0175C2"
+  },
+  {
+    "name": "Next.js",
+    "tagline": "The future of React apps.",
+    "color": "#000000"
+  },
+  {
+    "name": "Tailwind CSS",
+    "tagline": "Design at light speed.",
+    "color": "#06b6d4"
+  },
+  {
+    "name": "Node.js",
+    "tagline": "JavaScript. Everywhere.",
+    "color": "#6cc24a"
+  },
+  {
+    "name": "Express",
+    "tagline": "Minimal and fast.",
+    "color": "#000000"
+  },
+  {
+    "name": "PostgreSQL",
+    "tagline": "Rock-solid data.",
+    "color": "#336791"
+  },
+  {
+    "name": "MongoDB",
+    "tagline": "Flexible by nature.",
+    "color": "#4db33d"
+  },
+  {
+    "name": "Git",
+    "tagline": "Track. Save. Repeat.",
+    "color": "#f05032"
+  },
+  {
+    "name": "GitHub",
+    "tagline": "Where code lives.",
+    "color": "#000000"
+  },
+  {
+    "name": "Prettier",
+    "tagline": "Code but prettier.",
+    "color": "#f7b93c"
+  },
+  {
+    "name": "Supabase",
+    "tagline": "Open-source Firebase.",
+    "color": "#3ECF8E"
+  },
+  {
+    "name": "Firebase",
+    "tagline": "Build fast. Scale faster.",
+    "color": "#FFCA28"
+  },
+  {
+    "name": "Django",
+    "tagline": "Web dev done right.",
+    "color": "#092E20"
+  },
+  {
+    "name": "Linux",
+    "tagline": "Power and freedom.",
+    "color": "#000000"
+  },
+  {
+    "name": "Docker",
+    "tagline": "Ship anywhere.",
+    "color": "#2496ed"
+  },
+  {
+    "name": "Python",
+    "tagline": "Simple. Powerful.",
+    "color": "#3776AB"
+  },
+  {
+    "name": "AWS",
+    "tagline": "Cloud that scales.",
+    "color": "#FF9900"
+  },
+  {
+    "name": "FastAPI",
+    "tagline": "APIs. Fast and clean.",
+    "color": "#05998A"
+  },
+  {
+    "name": "Figma",
+    "tagline": "Design. Collaborate. Create.",
+    "color": "#F24E1E"
+  },
+  {
+    "name": "TypeScript",
+    "tagline": "Typed JavaScript for scale.",
+    "color": "#007acc"
+  },
+  {
+    "name": "VS Code",
+    "tagline": "Editor of choice.",
+    "color": "#007acc"
+  },
+  {
+    "name": "Vercel",
+    "tagline": "Deploy with zero hassle.",
+    "color": "#000000"
+  },
+  {
+    "name": "Yarn",
+    "tagline": "Fast dependency manager.",
+    "color": "#2C8EBB"
+  },
+  {
+    "name": "Terminal",
+    "tagline": "Where the magic happens.",
+    "color": "#ff0000"
+  }
+]

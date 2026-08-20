@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter+Tight:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   "Local network" — the palette is the status system, nothing more.
+   Ground is deep slate-teal (instrument panel), not void black.
+   Two colours, both load-bearing:
+     live  #35D08A = shipped / connected
+     signal #FFB454 = in progress / local-only
+   No third decorative accent. Colour means something or it's absent.
+---------------------------------------------------------------- */
+:root,
+[data-theme="light"] {
+  --bg:        #ECEFEE;
+  --bg-raised: #FFFFFF;
+  --fg:        #101718;
+  --fg-muted:  #5A6768;
+  --line:      #D3DAD8;
+  --live:      #128A56;
+  --signal:    #9A5B00;
+  --accent:    #128A56;
+  --scene-bg:    #ECEFEE;
+  --device-body: #C4CACB;
+}
+
+[data-theme="dark"] {
+  --bg:        #0D1214;
+  --bg-raised: #151C1F;
+  --fg:        #E8EDEA;
+  --fg-muted:  #7E8B8C;
+  --line:      #222C2F;
+  --live:      #35D08A;
+  --signal:    #FFB454;
+  --accent:    #35D08A;
+  --scene-bg:    #0D1214;
+  --device-body: #171F22;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-raised: var(--bg-raised);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-line: var(--line);
+  --color-live: var(--live);
+  --color-signal: var(--signal);
+  --color-accent: var(--accent);
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .35s ease, color .35s ease;
+}
+
+/* Utility label — the recurring structural device. Reads as instrument panel.
+   Layered so Tailwind text-* utilities can still override the colour. */
+@layer components {
+  .label {
+    font-family: var(--font-mono);
+    font-size: .625rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+}
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+/* The dialog takes focus when shown, but focus moves straight to Close — the
+   container ring is just a stray box around the whole panel. */
+dialog:focus, dialog:focus-visible, dialog > div:focus, dialog > div:focus-visible { outline: none; }
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; background: var(--accent); color: var(--bg); padding: .75rem 1.25rem; }
+.skip-link:focus { left: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

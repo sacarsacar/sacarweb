@@ -1,0 +1,102 @@
+{
+ "dairy": [
+  "auth",
+  "cart",
+  "chat",
+  "exchange",
+  "home1",
+  "home2",
+  "home3",
+  "landing",
+  "orders",
+  "products",
+  "profile",
+  "sales",
+  "users",
+  "wallet",
+  "wallet2"
+ ],
+ "firealertsystem": [
+  "alerts",
+  "dashboard",
+  "login",
+  "setting",
+  "stations",
+  "users"
+ ],
+ "jholmomo": [
+  "auth",
+  "cart",
+  "checkout",
+  "fav",
+  "landing",
+  "order",
+  "trackorders"
+ ],
+ "lms": [
+  "lmsabout",
+  "lmsachievement",
+  "lmschapters",
+  "lmsenroll",
+  "lmsenrollment",
+  "lmshome",
+  "lmsnotification",
+  "lmspayment",
+  "lmsprofile",
+  "lmssettings",
+  "lmsvideo"
+ ],
+ "multicloud": [
+  "auth",
+  "dashboard",
+  "map",
+  "twofa"
+ ],
+ "nnineattendence": [
+  "attendence_history",
+  "attendence_leave",
+  "attendence_playstore",
+  "attendence_profile",
+  "attendence_punchin",
+  "attendence_settings",
+  "attendence_web1",
+  "attendence_web2"
+ ],
+ "portfolio": [
+  "landing",
+  "navbar",
+  "project",
+  "projects",
+  "skills"
+ ],
+ "quickdo": [
+  "activetask",
+  "addtodo",
+  "analytics",
+  "completedtask",
+  "features",
+  "groups",
+  "groupsdark",
+  "reminders"
+ ],
+ "skillverify": [
+  "landing1",
+  "landing2",
+  "output1",
+  "output2",
+  "output3",
+  "output4",
+  "upload"
+ ],
+ "sperium-lounge": [
+  "auth",
+  "category",
+  "home",
+  "order",
+  "qr",
+  "web1",
+  "web2",
+  "web3",
+  "web4"
+ ]
+}
