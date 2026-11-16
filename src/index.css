@@ -1,0 +1,616 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   "Local network" — the palette is the status system, nothing more.
+   Ground is deep slate-teal (instrument panel), not void black.
+   Two colours, both load-bearing:
+     live  #35D08A = shipped / connected
+     signal #FFB454 = in progress / local-only
+   No third decorative accent. Colour means something or it's absent.
+---------------------------------------------------------------- */
+:root,
+[data-theme="light"] {
+  /* Dimmed on purpose: paper-grey, not white — easier on the eyes. Text
+     colours deepened to keep ≥4.5:1 on the darker ground. */
+  --bg:        #D9DFDD;
+  --bg-raised: #E6EAE9;
+  --fg:        #101718;
+  --fg-muted:  #4E5A5B;
+  --line:      #C2CBC9;
+  --live:      #0D6D45;
+  --signal:    #8A5100;
+  --accent:    #0D6D45;
+  --scene-bg:    #D9DFDD;
+  --device-body: #B8C0C1;
+}
+
+[data-theme="dark"] {
+  --bg:        #0D1214;
+  --bg-raised: #151C1F;
+  --fg:        #E8EDEA;
+  --fg-muted:  #7E8B8C;
+  --line:      #222C2F;
+  --live:      #35D08A;
+  --signal:    #FFB454;
+  --accent:    #35D08A;
+  --scene-bg:    #0D1214;
+  --device-body: #171F22;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-raised: var(--bg-raised);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-line: var(--line);
+  --color-live: var(--live);
+  --color-signal: var(--signal);
+  --color-accent: var(--accent);
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, monospace;
+}
+
+html { scroll-behavior: auto; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .35s ease, color .35s ease;
+}
+
+/* Utility label — the recurring structural device. Reads as instrument panel.
+   Layered so Tailwind text-* utilities can still override the colour. */
+@layer components {
+  /* Small pill link/button: the label face, 36px tall so it's an easy tap. */
+  .chip {
+    display: inline-flex; align-items: center; gap: .45rem;
+    min-height: 2.25rem; padding: .5rem .85rem;
+    border: 1px solid var(--line); border-radius: 999px;
+    font-family: var(--font-mono); font-size: .625rem; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--fg);
+    transition: border-color .25s var(--ease), color .25s var(--ease);
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .label {
+    font-family: var(--font-mono);
+    font-size: .625rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+}
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+/* The dialog takes focus when shown, but focus moves straight to Close — the
+   container ring is just a stray box around the whole panel. */
+dialog:focus, dialog:focus-visible, dialog > div:focus, dialog > div:focus-visible { outline: none; }
+/* ---- Motion ----------------------------------------------------------
+   One easing curve everywhere (expo-out): things arrive fast and settle,
+   which is what reads as "smooth" rather than "slow".
+----------------------------------------------------------------------- */
+:root { --ease: cubic-bezier(.16, 1, .3, 1); }
+
+[data-reveal] {
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  will-change: opacity, transform;
+}
+[data-reveal='out'] { opacity: 0; transform: translate3d(0, 20px, 0); }
+[data-reveal='in']  { opacity: 1; transform: none; will-change: auto; }
+
+/* Interactive surfaces share the curve so nothing feels out of step. */
+a, button, .label, input, textarea, img {
+  transition-timing-function: var(--ease);
+}
+
+/* Case study: fade + rise, and animate back out on close.
+   allow-discrete lets display/overlay participate so the exit isn't cut off. */
+dialog {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0) scale(.985);
+  transition:
+    opacity .38s var(--ease),
+    transform .38s var(--ease),
+    overlay .38s var(--ease) allow-discrete,
+    display .38s var(--ease) allow-discrete;
+}
+dialog[open] { opacity: 1; transform: none; }
+@starting-style {
+  dialog[open] { opacity: 0; transform: translate3d(0, 20px, 0) scale(.985); }
+}
+dialog::backdrop {
+  background: rgb(0 0 0 / 0);
+  backdrop-filter: blur(0px);
+  transition:
+    background-color .38s var(--ease),
+    backdrop-filter .38s var(--ease),
+    overlay .38s var(--ease) allow-discrete,
+    display .38s var(--ease) allow-discrete;
+}
+dialog[open]::backdrop { background: rgb(0 0 0 / .72); backdrop-filter: blur(6px); }
+@starting-style {
+  dialog[open]::backdrop { background: rgb(0 0 0 / 0); backdrop-filter: blur(0px); }
+}
+
+/* Signal rings ping outward from the availability node. */
+.ping { position: absolute; inset: 0; border-radius: 999px; border: 1px solid var(--live); }
+.ping-1 { animation: ping 2.8s cubic-bezier(0, 0, .2, 1) infinite; }
+.ping-2 { animation: ping 2.8s cubic-bezier(0, 0, .2, 1) .9s infinite; }
+@keyframes ping {
+  0%   { transform: scale(1);   opacity: .7; }
+  70%  { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+
+.tilt { transition: transform .5s var(--ease); transform-style: preserve-3d; }
+
+/* Animations off = data-motion="off" on <html>: the header switch, or the OS
+   "reduce motion" setting when the visitor hasn't chosen (index.html sets it pre-paint). */
+html[data-motion="off"] .ping { animation: none !important; opacity: 0 !important; }
+html[data-motion="off"] .tilt { transform: none !important; }
+
+/* Scroll cue: a travelling highlight down a hairline. */
+.scroll-cue { position: relative; overflow: hidden; }
+.scroll-cue::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: 40%;
+  background: var(--accent);
+  animation: cue 2.2s ease-in-out infinite;
+}
+@keyframes cue {
+  0%   { top: -40%; opacity: 0; }
+  35%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+html[data-motion="off"] .scroll-cue::after { animation: none; top: 0; opacity: .5; }
+
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; background: var(--accent); color: var(--bg); padding: .75rem 1.25rem; }
+.skip-link:focus { left: 0; }
+
+html[data-motion="off"] [data-reveal] { opacity: 1 !important; transform: none !important; }
+html[data-motion="off"] :is(dialog, dialog::backdrop) { transition: none !important; }
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after {
+  animation-duration: .01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+}
+html[data-motion="off"] .bird { display: none; }
+
+/* ---- Project shelf: screens tilt toward the pointer --------------------
+   The button carries the perspective and the pointer vars (set in Index.jsx);
+   only the screen moves, so the text under it stays readable. Hover-only and
+   mouse-only — touch and reduced-motion get a flat, still screen.
+----------------------------------------------------------------------- */
+.tilt { perspective: 900px; }
+.tilt-screen {
+  position: relative;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .7s var(--ease), border-color .3s var(--ease), box-shadow .7s var(--ease);
+}
+.tilt:hover .tilt-screen {
+  border-color: var(--accent);
+  box-shadow: 0 28px 48px -28px rgb(0 0 0 / .7);
+  transition-duration: .18s, .3s, .7s;
+}
+/* Specular sheen that follows the pointer, like light on glass. */
+.tilt-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgb(255 255 255 / .18), transparent 55%);
+  transition: opacity .4s var(--ease);
+}
+.tilt:hover .tilt-screen::after { opacity: 1; }
+@media (hover: none) {
+  .tilt-screen { transform: none; }
+  .tilt-screen::after { display: none; }
+}
+html[data-motion="off"] .tilt-screen { transform: none; }
+html[data-motion="off"] .tilt-screen::after { display: none; }
+
+/* ---- Light switch ---------------------------------------------------
+   Theme change as a bulb. On: the light theme floods out from the switch
+   with a filament flicker. Off: the light drains back into the switch,
+   with one last flare. (Triggered in useTheme via View Transitions.)
+---------------------------------------------------------------------- */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html[data-switch="on"]::view-transition-new(root) { animation: bulb-on 1.1s var(--ease) both; }
+html[data-switch="off"]::view-transition-old(root) {
+  z-index: 1;
+  animation: bulb-off .8s cubic-bezier(.7, 0, .3, 1) both;
+}
+/* The body's colour fade would muddy the reveal — the transition is the fade. */
+html[data-switch] body { transition: none; }
+@keyframes bulb-on {
+  0%   { clip-path: circle(0 at var(--vt-x) var(--vt-y)); opacity: 0; }
+  5%   { opacity: 1; }
+  11%  { opacity: .2; }
+  18%  { opacity: 1; }
+  24%  { opacity: .55; }
+  32%  { opacity: 1; }
+  100% { clip-path: circle(var(--vt-r) at var(--vt-x) var(--vt-y)); opacity: 1; }
+}
+@keyframes bulb-off {
+  0%   { clip-path: circle(var(--vt-r) at var(--vt-x) var(--vt-y)); filter: brightness(1); }
+  14%  { filter: brightness(1.3); }
+  100% { clip-path: circle(0 at var(--vt-x) var(--vt-y)); filter: brightness(.5); }
+}
+
+/* Switch icon: sun ↔ moon. The bite slides in to carve the crescent, the rays
+   retract, two stars twinkle in the notch. */
+/* Only the animated parts: the rays' own rotate(a 12 12) attributes must keep the default origin. */
+.theme-switch :is(.ts-core, .ts-rays, .ts-bite, .ts-star) { transform-box: fill-box; transform-origin: center; }
+.ts-core, .ts-rays, .ts-bite, .ts-star {
+  transition: transform .7s var(--ease), opacity .45s var(--ease);
+}
+.theme-switch { color: var(--sun); transition: color .5s var(--ease), border-color .3s var(--ease); }
+.ts-bite { transform: translate(8px, -8px); }
+.ts-star { opacity: 0; transform: scale(0); }
+.theme-switch:hover .ts-rays { transform: rotate(45deg); }
+[data-theme="dark"] .theme-switch { color: var(--moon); }
+[data-theme="dark"] .ts-core { transform: scale(1.4); }
+[data-theme="dark"] .ts-bite { transform: none; }
+[data-theme="dark"] .ts-rays { opacity: 0; transform: rotate(-90deg) scale(.3); }
+[data-theme="dark"] .ts-star {
+  opacity: 1; transform: none; transition-delay: .25s;
+  animation: twinkle 2.8s ease-in-out infinite;
+}
+[data-theme="dark"] .ts-star + .ts-star { animation-delay: 1.4s; }
+@keyframes twinkle { 50% { opacity: .3; transform: scale(.6); } }
+
+/* ---- Sky: sun by day, moon by night ----------------------------------
+   Behind the canvas; the sections below are opaque and cover it. One sets
+   as the other rises when the theme flips.
+---------------------------------------------------------------------- */
+:root, [data-theme="light"] {
+  --sun: #E0901F; --moon: #E8EDEA;
+  /* Day: hazy far range, darker foothills — atmospheric depth. */
+  --mtn-far: #C4CECC; --mtn-mid: #B1BDBB; --mtn-near: #9EADAB; --snow: #EEF2F1; --bird: #4E5A5B;
+}
+[data-theme="dark"] {
+  --sun: #F2B14C; --moon: #E8EDEA;
+  /* Night: silhouettes a shade off the ground, moonlit snow. */
+  --mtn-far: #182326; --mtn-mid: #141D20; --mtn-near: #10181A; --snow: #5F7271; --bird: #6E7C7D;
+}
+.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.sky-band { position: absolute; }
+.sky[data-paused] * { animation-play-state: paused !important; }
+
+/* Stars: two tiled dot layers, the second twinkling; faded out toward the ridgeline. */
+.sky-stars, .sky-stars::after {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 24px 38px, var(--moon) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 142px 18px, var(--moon) 0 .8px, transparent 1.4px),
+    radial-gradient(circle at 210px 96px, var(--moon) 0 1.2px, transparent 1.8px),
+    radial-gradient(circle at 86px 150px, var(--moon) 0 .8px, transparent 1.4px),
+    radial-gradient(circle at 268px 170px, var(--moon) 0 1px, transparent 1.6px);
+  background-size: 300px 210px;
+  mask-image: linear-gradient(#000 35%, transparent 72%);
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+.sky-stars::after { content: ''; background-size: 430px 290px; background-position: 120px 60px; }
+[data-theme="dark"] .sky-stars { opacity: .75; }
+[data-theme="dark"] .sky-stars::after { opacity: 1; animation: twinkle-field 3.6s ease-in-out infinite alternate; }
+@keyframes twinkle-field { to { opacity: .25; } }
+
+/* Mountains: three ridgelines; --p (rail progress) slides them at different speeds. */
+.mountains { position: absolute; left: -6%; right: -6%; bottom: 0; height: clamp(150px, 32vh, 320px); }
+.mtn { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform .6s var(--ease); }
+.mtn path { transition: fill .9s var(--ease); }
+.mtn-far  { fill: var(--mtn-far);  transform: translateX(calc(var(--p, 0) * -1.5%)); }
+.mtn-mid  { fill: var(--mtn-mid);  transform: translateX(calc(var(--p, 0) * -3%)); }
+.mtn-near { fill: var(--mtn-near); transform: translateX(calc(var(--p, 0) * -5%)); }
+.mtn .snow { fill: var(--snow); }
+
+/* Birds: a gull "m" that flaps (scaleY), bobs, and crosses the sky. */
+.bird {
+  position: absolute; left: 0; top: var(--y);
+  width: calc(22px * var(--s));
+  animation: fly 36s linear infinite;
+}
+.bird-bob { display: block; animation: bob 3.4s ease-in-out infinite alternate; }
+.bird svg {
+  display: block; width: 100%; overflow: visible;
+  fill: none; stroke: var(--bird); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+  animation: flap .42s ease-in-out infinite alternate;
+  transition: stroke .9s var(--ease);
+}
+@keyframes fly  { from { transform: translateX(-6vw); } to { transform: translateX(106vw); } }
+@keyframes bob  { from { transform: translateY(-7px); } to { transform: translateY(7px); } }
+@keyframes flap { to { scale: 1 .3; } }
+
+/* Dialog strip: same scene, scaled down. */
+.sky-band .sun, .sky-band .moon { --d: clamp(30px, 3.6vw, 52px); top: 16%; right: 9%; }
+.sky-band .mountains { height: 78%; }
+.sky-band .bird { top: calc(var(--y) * 1.4); }
+.sun, .moon {
+  --d: clamp(46px, 6vw, 84px);
+  position: absolute;
+  right: 11vw;
+  top: 15vh;
+  width: var(--d);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transition: transform 1.4s var(--ease), opacity 1s var(--ease);
+}
+.sun {
+  background: radial-gradient(circle at 38% 36%, #FFF1C6, #F7BC4E 58%, #EE9628);
+  box-shadow: 0 0 60px 18px rgb(247 188 78 / .35), 0 0 180px 70px rgb(247 188 78 / .16);
+}
+.moon {
+  box-shadow:
+    inset calc(var(--d) * -.24) calc(var(--d) * .1) 0 0 var(--moon),
+    0 0 70px 6px rgb(232 237 234 / .1);
+  transform: rotate(-20deg);
+}
+[data-theme="dark"] .sun { opacity: 0; transform: translateY(70px) scale(.7); }
+[data-theme="light"] .moon { opacity: 0; transform: translateY(70px) rotate(-60deg) scale(.7); }
+@media (max-width: 767px) { .sky:not(.sky-band) :is(.sun, .moon) { right: 8vw; top: 10vh; } }
+
+/* ---- Cursor ----------------------------------------------------------
+   A real arrow, drawn by the OS so it never lags, in the site's green.
+   A small ring trails it on a spring (Pointer.jsx) and swells over anything
+   clickable. Mouse/trackpad only; text fields keep the I-beam.
+---------------------------------------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+  html, html * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Cpath d='M2.5 2.5l16 6.6-6.7 2.7-2.7 6.7z' fill='%2335D08A' stroke='%230D1214' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 2 2, auto !important;
+  }
+  html[data-theme="light"], html[data-theme="light"] * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Cpath d='M2.5 2.5l16 6.6-6.7 2.7-2.7 6.7z' fill='%230D6D45' stroke='%23FFFFFF' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 2 2, auto !important;
+  }
+  html[data-theme] :is(input:not([type="submit"]), textarea, [contenteditable]) { cursor: text !important; }
+}
+.cursor-ring {
+  position: fixed; inset: 0 auto auto 0; width: 0; height: 0;
+  margin: 0; padding: 0; border: 0; background: none; overflow: visible;
+  pointer-events: none; will-change: transform;
+  transition: opacity .25s var(--ease), scale .25s var(--ease);
+}
+.cursor-ring[data-out], .cursor-ring[data-state="text"] { opacity: 0; }
+.cursor-ring[data-down] { scale: .75; }
+.cursor-ring > span {
+  position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px;
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent); border-radius: 50%;
+  transition: scale .45s var(--ease), background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.cursor-ring[data-state="link"] > span {
+  scale: 1.5;
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* ---- Header eyes (Pointer.jsx) -------------------------------------- */
+.eyes { display: inline-flex; gap: 3px; }
+.eye {
+  display: grid; place-items: center;
+  width: 17px; height: 19px; border-radius: 50%;
+  background: #F4F7F6; border: 1px solid var(--line);
+  overflow: hidden;
+  transition: scale .09s ease-in;
+}
+.eyes.blink .eye { scale: 1 .08; }
+.pupil {
+  position: relative; width: 7px; height: 7px; border-radius: 50%;
+  background: #0D1214;
+  transition: transform .18s var(--ease), scale .35s var(--ease);
+}
+.pupil::after {
+  content: ''; position: absolute; top: 1px; left: 3.5px;
+  width: 2px; height: 2px; border-radius: 50%; background: #fff;
+}
+html[data-pointer="link"] .pupil { scale: 1.35; }
+
+/* Newly shown content (the rail's panel, the centred live site) slides in. */
+.swap-in { animation: swap-in .55s var(--ease) both; }
+@keyframes swap-in { from { opacity: 0; transform: translate3d(0, 14px, 0); } }
+
+/* ---- Live sites ------------------------------------------------------
+   Tile: a fanned deck that spreads on hover. Dialog: a coverflow stage.
+---------------------------------------------------------------------- */
+.sites-deck { perspective: 700px; }
+.sites-deck-card {
+  aspect-ratio: 16 / 10;
+  object-fit: cover; object-position: top;
+  box-shadow: 0 12px 24px -14px rgb(0 0 0 / .6);
+  transform: translateX(calc(var(--i) * 9% - 12%)) translateZ(calc(var(--i) * -34px)) rotateY(-22deg);
+  z-index: calc(10 - var(--i));
+  transition: transform .8s var(--ease);
+}
+.sites-tile:hover .sites-deck-card {
+  transform: translateX(calc(var(--i) * 20% - 24%)) translateY(calc(var(--i) * -3px))
+             translateZ(calc(var(--i) * -50px)) rotateY(-32deg);
+  transition-delay: calc(var(--i) * 45ms);
+}
+
+.sites-stage { perspective: 1700px; touch-action: pan-y; }
+/* Soft floor light under the centred card. */
+.sites-stage::before {
+  content: ''; position: absolute; left: 50%; bottom: 4%;
+  width: min(70vw, 760px); height: 70px; transform: translateX(-50%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 22%, transparent), transparent);
+  filter: blur(8px); pointer-events: none;
+}
+.site-card {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(80vw, 780px, calc((100dvh - 330px) * 1.5));
+  border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+  background: var(--bg-raised);
+  box-shadow: 0 50px 90px -50px rgb(0 0 0 / .75);
+  will-change: transform;
+  transition: transform .8s var(--ease), opacity .5s var(--ease), border-color .3s var(--ease);
+}
+.site-card[data-active] { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+.site-card[data-active]::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgb(255 255 255 / .14), transparent 55%);
+}
+.site-bar {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 30px; padding: 0 12px;
+  border-bottom: 1px solid var(--line);
+  font: 500 .66rem/1 var(--font-mono); color: var(--fg-muted);
+}
+.site-shade { position: absolute; inset: 0; background: var(--bg); pointer-events: none; transition: opacity .6s var(--ease); }
+
+/* ---- Tech tiles (Stack) ----------------------------------------------
+   Marks sit in the text colour; hovering lights them in the brand colour
+   where that colour reads on the current ground (see data/index.js).
+---------------------------------------------------------------------- */
+.tech { transition: transform .45s var(--ease), border-color .3s var(--ease), background-color .3s var(--ease); }
+.tech:hover { transform: translateY(-3px); border-color: var(--accent); }
+.tech-icon { color: var(--fg); opacity: .82; transition: color .3s var(--ease), opacity .3s var(--ease), transform .55s var(--ease); }
+.tech:hover .tech-icon { opacity: 1; transform: scale(1.14) rotate(-5deg); }
+[data-theme="dark"] .tech:hover .tech-icon { color: var(--brand-d, var(--fg)); }
+[data-theme="light"] .tech:hover .tech-icon { color: var(--brand-l, var(--fg)); }
+
+/* pub.dev logo on package tiles. */
+.pub-logo svg { display: block; width: 100%; height: auto; }
+
+/* Skip-the-rail control: the arrow nudges downward, once in a while. */
+.skip-arrow { animation: nudge 2.2s var(--ease) infinite; }
+@keyframes nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(3px); } }
+
+/* ---- About ------------------------------------------------------------
+   One orchestrated moment (the headline, word by word); everything else
+   moves only when touched.
+---------------------------------------------------------------------- */
+.word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.word > span { display: inline-block; transform: translate3d(0, 108%, 0); transition: transform .95s var(--ease); }
+.word > span[data-on] { transform: none; }
+
+.clock-tick { animation: tick .45s var(--ease); }
+@keyframes tick { from { opacity: 0; transform: translate3d(0, -40%, 0); } }
+
+.stat, .craft { transition: transform .45s var(--ease), border-color .3s var(--ease); }
+.stat:hover { transform: translateY(-3px); }
+.craft:hover { transform: translateY(-4px); border-color: var(--accent); }
+
+/* "What I do" icons: the phone tips, the signal comes back, the build ships. */
+.craft-icon :is(rect, path, g) { transform-box: fill-box; transform-origin: center; }
+.craft-phone { transition: transform .6s var(--ease); }
+.craft:hover .craft-phone { transform: rotate(-14deg) translateY(-1px); }
+.craft-slash { stroke-dasharray: 23; stroke-dashoffset: 0; transition: stroke-dashoffset .7s var(--ease); }
+.craft:hover .craft-slash { stroke-dashoffset: 23; }
+.craft:hover .craft-arrow { animation: ship 1.1s var(--ease) infinite; }
+@keyframes ship {
+  0%   { transform: none; opacity: 1; }
+  55%  { transform: translateY(-5px); opacity: 0; }
+  56%  { transform: translateY(5px); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+
+/* Find me: the hairline draws across, then the profiles pop in along it. */
+.profiles-line { transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease) .1s; }
+.profiles[data-reveal="in"] .profiles-line { transform: scaleX(1); }
+.profiles .profile-node {
+  opacity: 0; transform: translateY(10px) scale(.92);
+  transition: opacity .5s var(--ease), transform .6s var(--ease);
+  transition-delay: calc(.3s + var(--i) * 70ms);
+}
+.profiles[data-reveal="in"] .profile-node { opacity: 1; transform: none; }
+
+/* ---- Layout ------------------------------------------------------------
+   One gutter scale for every section, and a content cap so 1920–2560px
+   screens get a centred page instead of edge-to-edge stretch.
+---------------------------------------------------------------------- */
+:root { --gutter: 1.25rem; --max: 1560px; }
+@media (min-width: 640px)  { :root { --gutter: 1.5rem; } }
+@media (min-width: 768px)  { :root { --gutter: 2.5rem; } }
+@media (min-width: 1024px) { :root { --gutter: 3.5rem; } }
+.wrap { padding-inline: max(var(--gutter), calc((100% - var(--max)) / 2)); }
+.edge-right { right: max(var(--gutter), calc((100% - var(--max)) / 2)); }
+
+/* Short screens (landscape phones): the hero and the live-sites view tighten up. */
+@media (max-height: 560px) {
+  .hero-cue, .panel-extra { display: none; }
+  .sites-list { display: none; }
+  .sites-stage { min-height: 9rem; }
+  .site-card { width: min(56vw, calc((100dvh - 150px) * 1.6)); }
+}
+
+/* ---- Avatar (About) ----------------------------------------------------
+   Head-and-shoulders crop in a ring, with his title running around it.
+---------------------------------------------------------------------- */
+.avatar { perspective: 700px; }
+.avatar-ring { animation: orbit 32s linear infinite; }
+.avatar-ring text { font: 600 9.6px var(--font-mono); letter-spacing: .2em; fill: var(--fg-muted); text-transform: uppercase; }
+@keyframes orbit { to { transform: rotate(360deg); } }
+.avatar-photo {
+  padding: 3px;
+  background: conic-gradient(from 210deg, var(--accent), transparent 35%, transparent 65%, var(--accent));
+  box-shadow: 0 18px 40px -22px color-mix(in srgb, var(--accent) 70%, transparent);
+  transition: transform .6s var(--ease);
+}
+.avatar:hover .avatar-photo { transform: scale(1.04); }
+
+/* ---- Experience timeline ---------------------------------------------- */
+.tl-node { box-shadow: 0 0 0 4px var(--bg); }
+
+/* ---- Mobile menu --------------------------------------------------------
+   Full-screen sheet; links rise in one after another.
+---------------------------------------------------------------------- */
+.menu-link { opacity: 0; transform: translate3d(0, 14px, 0); transition: opacity .45s var(--ease), transform .55s var(--ease); }
+dialog[open] .menu-link { opacity: 1; transform: none; transition-delay: calc(80ms + var(--i) * 55ms); }
+
+/* ---- Forms -------------------------------------------------------------- */
+.field { transition: border-color .25s var(--ease), box-shadow .25s var(--ease); }
+.field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); outline: none; }
+.field:user-invalid { border-color: var(--signal); }
+
+/* Touch has no hover: the tech taglines would never show, and they sit off-edge. */
+@media (hover: none) { .tech-tip { display: none; } }
+
+.sent-check { animation: pop .7s var(--ease) both; }
+@keyframes pop { from { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } }
+
+/* Header: the section you're in gets a dot under its name. */
+.nav-link { position: relative; }
+.nav-link[aria-current] { color: var(--fg); }
+.nav-link::after {
+  content: ''; position: absolute; left: 50%; bottom: 5px;
+  width: 4px; height: 4px; margin-left: -2px; border-radius: 50%;
+  background: var(--accent); transform: scale(0); transition: transform .35s var(--ease);
+}
+.nav-link[aria-current]::after { transform: scale(1); }
+
+/* Hero entrance: CSS only, starting at first paint. Not opacity 0 — a fully
+   transparent element isn't an LCP candidate, so the headline would only
+   "count" once JS-driven reveals had run. */
+.hero-in { animation: hero-rise .9s var(--ease) var(--d, 0ms) both; }
+@keyframes hero-rise { from { opacity: .01; transform: translate3d(0, 18px, 0); } }
+@keyframes fade-in { from { opacity: 0; } }
+
+/* ---- Hero still (animations off / no WebGL) --------------------------------
+   Three phone screens, fanned like the rail. Top on phones, right on wider screens.
+---------------------------------------------------------------------- */
+.still-stage {
+  position: absolute; left: 0; right: 0; top: 78px; height: 32dvh;
+  display: flex; align-items: center; justify-content: center; perspective: 1400px;
+}
+@media (min-width: 768px) { .still-stage { left: auto; right: 3%; width: 54%; top: 0; bottom: 0; height: auto; } }
+.still-phone {
+  height: 100%; aspect-ratio: 9 / 19.5; object-fit: cover; object-position: top;
+  border-radius: 1.5rem; border: 6px solid var(--device-body); background: var(--bg-raised);
+  box-shadow: 0 40px 70px -30px rgb(0 0 0 / .65);
+}
+@media (min-width: 768px) { .still-phone { height: min(62dvh, 600px); } }
+.still-front { position: relative; z-index: 1; }
+.still-side { height: 84%; opacity: .7; }
+@media (min-width: 768px) { .still-side { height: min(52dvh, 500px); } }
+.still-left  { margin-right: -7%; transform: rotateY(28deg); }
+.still-right { margin-left: -7%; transform: rotateY(-28deg); }
+
+/* The still hands over to the 3D rail once it has drawn. */
+.hero-still { transition: opacity .7s var(--ease), visibility 0s linear 0s; }
+.hero-still[data-hidden] { opacity: 0; visibility: hidden; transition: opacity .7s var(--ease), visibility 0s linear .7s; }

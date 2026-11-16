@@ -1,0 +1,1209 @@
+[
+ {
+  "id": "drop",
+  "title": "Drop",
+  "category": "Community engagement app",
+  "status": "completed",
+  "featured": true,
+  "image": "/assets/projects-screenshots/drop/screen-1.webp",
+  "play": "https://play.google.com/store/apps/details?id=com.gcc.drop",
+  "appStore": "https://apps.apple.com/np/app/drop-community-engagement-app/id6755708377",
+  "frontend": [
+   "flutter",
+   "dart",
+   "kotlin",
+   "swift",
+   "bloc",
+   "sqlite",
+   "sockerio",
+   "webrtc",
+   "ffmpeg",
+   "firebase"
+  ],
+  "backend": [],
+  "summary": "A community engagement platform for real-world events: everyone at a hackathon, wedding or festival captures into one shared, live space instead of their own camera roll. Flutter on iOS and Android, offline-first and real-time, with a custom native camera stack — about 383k lines of Dart, live on the App Store and Google Play.",
+  "details": [
+   "Built around a shared space",
+   "The things people organise together are captured by everyone who was there, not by one person's phone. So Drop is not a personal timeline: it is a set of shared spaces a community fills in together, and a map of those spaces in the real world.",
+   "An organiser opens a Droplet for the occasion and everyone inside it captures into the same live library. Droplets join a Hub, where an organisation runs many occasions at once, awards badges and keeps a public timeline. Visitors and hired photographers get in through Explore QR codes with scoped, revocable access instead of an account and a follow request.",
+   "A custom camera stack",
+   "The camera is a locally forked camerawesome with native patches on both platforms. It has four modes — photo, video, time-lapse and slow motion (120 fps on iOS through AVFoundation, 60 fps on Android through a native recorder, retimed on device).",
+   "HDR capture, hardware stabilisation plus FFmpeg post-stabilisation, native lens switching between ultra-wide, wide and telephoto, and a frame-rate picker that only offers rates the device supports at the chosen quality. No full-resolution decode ever runs on the UI isolate.",
+   "A feed that opens from disk",
+   "The home feed is disk-first: cold start, reopen and pull-to-refresh all read from a local database, and the network is touched only by a background prefetch loop, so time to first paint is bounded by disk, not signal.",
+   "A three-tier device model sets prefetch depth, live video controllers, buffers and decode sizes. HLS segments are cached on disk, playback starts from a 100 ms buffer, and a coordinator keeps exactly one video playing even when two fit on screen.",
+   "Uploads that survive being killed",
+   "Every upload is written to disk as a durable intent before a byte moves. On reconnect or relaunch the app replays it with fresh presigned URLs, and every create call carries an idempotency key, so a retry repairs the original post instead of publishing a duplicate. Large files use S3 multipart with byte-level resume.",
+   "Chat, calls and encryption",
+   "Direct messages, squad rooms and Droplet rooms are served from local SQLite first, so the app opens into content fully offline, with an outbox for sends made without signal. Message text is end-to-end encrypted with PBKDF2 and AES-GCM — a byte-for-byte port of the web client's crypto, with sender-key rotation when a member leaves. Real-time traffic runs over 11 Socket.IO namespaces.",
+   "One-to-one calls use WebRTC with CallKit and ConnectionService, so they ring on the lock screen. PushKit and FCM wake-ups mean an answer tapped on the lock screen of a killed app still connects.",
+   "The event map",
+   "The landing screen is a map of Droplets pinned to a place and a time, built on OpenStreetMap tiles with no API key and no native map SDK. Five colour themes are each a single colour-filter matrix over the raw tiles, and a permanently mounted coarse tile layer stops the map going black when zooming far out.",
+   "Pins carry a two-beat heartbeat driven by one shared clock, so a screen of fifty pins costs two transforms each. Overlapping pins collapse into count dots using clustering maths shared with the web client.",
+   "Live, gifts and battles",
+   "Watching and hosting a live runs on AWS IVS: HLS playback, chat over a plain dart:io WebSocket with the token passed as the subprotocol, and RTMPS for hosting. Drop Bubbles are animated gifts with a coin price, and Pair Battles score two Droplets against each other on the server's clock, so a device with a wrong clock can't end a battle early.",
+   "Native integration",
+   "Eight custom MethodChannels reach what no plugin offered: a StoreKit 2 purchase bridge in Swift that finishes a transaction only after the backend confirms it, real frame-rate probing, CameraX lens control, a volume-button shutter, background transfers, share-sheet suggestions, and home-screen and lock-screen widgets. There is also an iOS share extension.",
+   "Hard bugs, solved",
+   "A feed that scrolled itself: trimming items from a sliver list re-anchors the viewport in a way no measured correction can cancel, so the list became append-only and only the video controllers are released.",
+   "A camera that took four seconds to open: tracing showed bring-up was 95 ms; the delay was the UI isolate starved by an SQLite lock storm elsewhere. Duplicate posts came from a socket handler registered twice; an init guard and a serial insert queue fixed it.",
+   "Architecture and release",
+   "Views use cubits over 44 repositories that return Either<Failure, T>, so no exception reaches the UI. SQLite is the offline source of truth, routes are typed (about 120 of them), and three upstream plugins are forked with small, documented patches.",
+   "GitLab CI/CD runs analyse, preflight, build and store upload through fastlane to TestFlight and the Play Console, with deterministic build numbers (odd for dev, even for prod) and Shorebird for over-the-air Dart patches. 264 test files pin the invariants that once shipped bugs."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "work"
+ },
+ {
+  "id": "dropit",
+  "title": "Dropit",
+  "category": "Web client",
+  "status": "completed",
+  "live": "https://dropit.club",
+  "frontend": [
+   "next",
+   "ts",
+   "react",
+   "tailwind",
+   "sockerio",
+   "webrtc"
+  ],
+  "backend": [],
+  "summary": "The Next.js web client for Drop — the same live galleries, chat, Hubs and calls as the app, in the browser. I contribute to it alongside the Flutter app: about 157k lines of TypeScript across 97 routes, on the same REST and Socket.IO backend.",
+  "details": [
+   "One room, one live gallery",
+   "Most social apps are built around one person posting to an audience; Drop is built around a room. Scan a QR at the door, and every photo taken for the next three hours lands in the same live gallery everyone in the room is watching fill up.",
+   "The web client covers everything downstream of a capture — Droplets, Hubs, Explore, chat, calls, the map, live streams, analytics with PDF export, subscriptions and media-access controls. Capture itself stays the app's job.",
+   "End-to-end encrypted messages",
+   "Direct messages are encrypted in the browser and the server never sees plaintext: an X25519 key exchange derives a shared secret, hashed into an AES-GCM key with a random IV for each message. The unlocked private key lives only in memory behind a PIN — never in storage, never on the wire.",
+   "One socket, four channels",
+   "A single Socket.IO connection carries four namespaces — chat, sessions, notifications and drops — shared through one React context, so no feature opens its own socket. Socket listeners live in their own layer and never leak into components.",
+   "Machine learning in the browser",
+   "Image search runs MobileNetV2 through ONNX Runtime Web entirely on the device, in batches of eight to cap memory, so no photo leaves the browser to be indexed. Face enrolment uses MediaPipe head pose to require five held poses, with a timed fallback when MediaPipe can't load.",
+   "A media pipeline in the client",
+   "MP4s are rewritten in the browser so the moov atom comes first and playback starts before the download ends. HLS clips download as real MP4 files by remuxing their segments with mux.js. Uploads go straight to S3 with presigned URLs and a progress bar that never sits frozen, and multi-select media exports as a ZIP built client-side.",
+   "The Map",
+   "Google Maps and OpenStreetMap sit behind one map component, with OpenStreetMap as the zero-key default. The five themes are CSS filter chains — the source of truth the app turns into colour matrices — and place search and geocoding go through the backend, so no key ever reaches the browser.",
+   "Live, gifts and battles",
+   "A live stream plays through the IVS player with an hls.js fallback, chats over a raw WebSocket authenticated by its subprotocol, and broadcasts on IVS Real-Time Stage so viewers can be brought on camera. Hearts are throttled to one per 200 ms per viewer, and Pair Battle countdowns run on the server's clock.",
+   "QR joins and deep links",
+   "QR is the main way people join a Droplet, so web paths are kept identical to the Flutter app's routes. Share pages try to open the app, then fall back to the right store or the web view by platform.",
+   "Built to degrade",
+   "The landing page renders from the API with a hardcoded fallback, so a backend outage never produces an empty page; one middleware catches account suspension for all 38 API slices; and every cached query resets when the signed-in user changes, so multi-account sessions can't leak data.",
+   "Stack and delivery",
+   "Next.js 16 with the App Router and server components, strict TypeScript, React 19, Tailwind CSS 4 and Redux Toolkit Query. Jest covers the pure logic — crypto, message ordering, QR parsing, deep links — and Docker images ship through GitLab CI to AWS, with media on S3 and CloudFront."
+  ],
+  "platforms": [
+   "web"
+  ],
+  "context": "work",
+  "image": "/assets/projects-screenshots/dropit/screen-1.png"
+ },
+ {
+  "id": "quickdo",
+  "title": "QuickDo",
+  "category": "Task manager",
+  "status": "completed",
+  "featured": true,
+  "image": "/assets/projects-screenshots/quickdo/activetask.jpg",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.quickdo",
+  "github": "https://github.com/sacarsacar/TO_DO_App",
+  "frontend": [
+   "flutter",
+   "dart",
+   "bloc",
+   "hive"
+  ],
+  "backend": [],
+  "summary": "An offline-first Android task manager with no account, sync or server. The same tasks can be viewed as a list or a four-column Kanban board, with Hive storage behind a feature-first Clean Architecture and BLoC layer.",
+  "details": [
+   "Two modes, one dataset",
+   "Normal mode shows a flat list of active tasks, while Developer mode shows a Kanban board with Backlog, Todo, In Progress and Done columns.",
+   "The mode is a view over the same data, so a task captured in one appears in the other, and stats, alerts and backups behave identically in both.",
+   "On a wide screen all four board columns sit side by side; on a phone the board shows one column at a time with a column switcher.",
+   "Tasks and organisation",
+   "Tasks carry a priority, category, due date, reminder, subtasks and per-title bold, italic or underline styling. Status and the completed flag are kept in step rather than stored independently.",
+   "Tasks can be grouped by status, category or due date, filtered by category and status, searched live by text or voice, and acted on together through multi-select.",
+   "Local notifications are scheduled per task with timezone-aware timing and rescheduled after a reboot, and an Android home screen widget lists the next five active tasks.",
+   "Offline-first storage",
+   "Everything is stored on the device in Hive, with no account or sync. The only network traffic the app makes is a Firebase Crashlytics crash report.",
+   "Hive adapters use fixed type ids that are never renumbered, and one-time migrations at boot promote legacy free-text category names to id-based category records.",
+   "Backups are versioned JSON files that can be shared, saved or imported. Categories travel with the tasks, because a task stores only a category id.",
+   "Architecture and resilience",
+   "Widgets never touch Hive: repositories sit behind domain interfaces, and get_it registration is idempotent so a retried boot or a test that installed fakes first does not fail.",
+   "Startup runs inside a Boot widget. Essential steps show a readable failure screen with Retry, optional steps are individually time-boxed and skipped on failure, and the whole sequence has a 15-second ceiling.",
+   "The interface is monochrome, with colour reserved for priority and overdue state; category accents are the one exception and are contrast-checked by a test."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "localplay",
+  "title": "LocalPlay",
+  "category": "Music player",
+  "status": "completed",
+  "featured": true,
+  "image": "/assets/projects-screenshots/localplay/screen-1.webp",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.localplay",
+  "frontend": [
+   "flutter",
+   "dart",
+   "provider",
+   "justaudio"
+  ],
+  "backend": [],
+  "summary": "An offline Flutter music player for the device's local library, with six interchangeable player layouts and background playback via audio_service. Its Android home screen widgets control playback through the media session, so they work even when the app process is closed.",
+  "details": [
+   "Playback and audio",
+   "Songs from the device library play through just_audio, with background playback via audio_service and device audio handling through audio_session.",
+   "Playback options include gapless playback, crossfade with adjustable duration, speed and pitch control from 0.5x to 2.0x, repeat and shuffle modes, and a draggable Up Next queue.",
+   "An equalizer screen offers bass boost and volume boost. An auto-stop timer can fade out over up to 30 seconds and repeat on chosen weekdays.",
+   "Library and personalisation",
+   "The library can be browsed by songs, artists, albums or folders, with breadcrumb folder navigation, sort options, alphabetical scrolling and voice search via speech_to_text.",
+   "Playlists, favorites and recently played lists persist across sessions, and a statistics dashboard tracks per-song play count, total play time and first and last played dates.",
+   "The player screen can switch between six layouts: Modern, Vinyl, Retro, Classic, Minimalist and Cyberpunk. The app also offers nine colour themes and a Material You dynamic theme that takes its accent from the wallpaper on Android 12 and later.",
+   "Device integration",
+   "Shaking the device skips to the next song, using the accelerometer through sensors_plus, with three sensitivity levels and debounce protection.",
+   "Android home screen widgets come in three shapes: Bar, Card and Disc. Their controls go through the media session, so they work when the app process is closed, and widget state persists across restarts.",
+   "Deep links handled through app_links can open specific songs or playlists.",
+   "Architecture and delivery",
+   "State is managed with Provider, split into separate providers for the player, songs, playlists, favorites, equalizer, themes, settings, statistics and the auto-stop timer, with services for audio, shake detection, widgets and deep links.",
+   "Dev and prod flavors have separate entry points and a shared bootstrap that routes framework and async errors to Firebase Crashlytics, with collection disabled in debug builds.",
+   "Shorebird is wired in for over-the-air patches that change Dart code without a store reinstall; native or dependency changes still need a full release."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "global-equalizer",
+  "title": "Global Equalizer",
+  "category": "Audio equalizer",
+  "status": "completed",
+  "featured": true,
+  "image": "/assets/projects-screenshots/globalequalizer/screen-1.webp",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.globalequilizer",
+  "frontend": [
+   "flutter",
+   "dart",
+   "bloc",
+   "kotlin"
+  ],
+  "backend": [],
+  "summary": "A system-wide Android audio processor with graphic EQ, bass boost, 3D widening, volume boost and reverb, built as a Flutter UI over native Kotlin DSP via android.media.audiofx. It verifies what the device actually supports and reports when no audio is being processed.",
+  "details": [
+   "Working within Android's limits",
+   "Since Android 9 a non-privileged app cannot attach effects to the global output mix, because that needs a signature-level permission. The app therefore also attaches to the audio sessions that cooperating players such as VLC and Poweramp broadcast; Spotify, YouTube and Chrome do not broadcast them.",
+   "A status line always states which case applies: processing all system audio, processing a number of apps, or waiting for a compatible player.",
+   "Some chipsets accept a reverb insert effect and then ignore every write. The app writes the reverb setting, reads it back, and marks reverb unsupported if the value did not take, greying out the control and explaining why.",
+   "The curve is the control",
+   "The response graph is the dominant element, and band handles sit on the trace itself. Graticule, trace, fill and handles are drawn by one CustomPainter with a single gesture surface, so handle positions and drag mapping share the same arithmetic.",
+   "Android fixes the band count per device, usually 5 and sometimes 10. The 5, 7 or 10-band selector picks the editing grid, and the curve is resampled onto the device's real bands by log-frequency interpolation.",
+   "Interchangeable layouts present the same state, and each decides how bass boost, 3D sound and volume are drawn. Console-style layouts use hand-painted knobs dragged vertically, while measurement layouts show levels as bars against a scale.",
+   "Volume is shown as 100 to 200 percent and converted logarithmically, so 200 percent is +6.02 dB of makeup gain, the cost of doubling an amplitude.",
+   "Native audio engine",
+   "Flutter talks to Kotlin over a MethodChannel and an EventChannel. An AudioEngineManager keeps one AudioEngine per reachable session, each chaining Equalizer, BassBoost, Virtualizer, LoudnessEnhancer and PresetReverb, and mirrors one settings object onto all of them.",
+   "One EqualizerBloc owns the whole effect chain and its presets, persisted with HydratedBloc except for device capabilities, which are re-read on every boot. The native side mirrors settings to SharedPreferences because the sticky service restarts without access to Dart storage.",
+   "Media controls read the active MediaSession and forward transport commands to the owning app. Access comes from an empty NotificationListenerService that exists only to obtain the grant and reads no notifications.",
+   "Toggles that cannot disagree",
+   "The in-app switch, notification action, home screen widget and Quick Settings tile all send the same toggle action to the foreground service rather than flipping their own state, so no surface can contradict the others.",
+   "A boot receiver restarts the service only if the user left processing on. The service uses the specialUse foreground type on API 34 and later, where it is allowed at boot, and mediaPlayback on API 29 to 33; a refused start clears the saved flag so the widget and tile report off."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "shift-roster-planner",
+  "title": "Shift & Roster Planner",
+  "category": "Shift planner",
+  "status": "completed",
+  "featured": true,
+  "image": "/assets/projects-screenshots/shiftplanner/screen-1.webp",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.shift_roster_planner",
+  "frontend": [
+   "flutter",
+   "dart",
+   "bloc",
+   "isar"
+  ],
+  "backend": [],
+  "summary": "An offline-first shift tracker covering roster patterns, pay estimation and timesheet export, with the roster in an on-device Isar database. Pay is calculated in one pure-Dart module, and stored totals are re-derived whenever pay settings change.",
+  "details": [
+   "Rosters, pay and exports",
+   "Users log shifts and apply repeating roster patterns, and pay estimates account for breaks, daily overtime, double time, overnight spans, night differential, weekly top-up and tax.",
+   "Timesheets export as PDF and Excel, and any period can be shared as an .ics calendar file. Each event has a stable UID, so calendars that honour UIDs update rather than duplicate on re-import.",
+   "Calendar export is a file rather than a sync on purpose: no calendar permission, no account, and the app stays offline.",
+   "Currency is picked from a catalogue rather than typed, so the symbol and subunit count cannot disagree. The PDF embeds Work Sans, and symbols the font cannot draw print as the ISO code.",
+   "Designed for reading rotas",
+   "A shift is drawn as a filled block carrying its short code, and a RotaStrip compresses a whole month into one band so the pattern can be read at a glance.",
+   "The palette is a dark-first cool slate because the app gets opened at night in dim wards and depots. User-chosen shift colours are the only saturated elements, and a single brass accent marks money and primary actions.",
+   "Fonts are bundled rather than fetched at runtime, which keeps the app working offline, and every numeral is tabular so values do not shift as they change.",
+   "Offline data and backup",
+   "The roster lives in an on-device Isar database, and each flavor opens its own database and hydrated-bloc store so dev experiments never touch real data. The only automatic network traffic is a Crashlytics crash report.",
+   "Pay is calculated in one pure-Dart module with no Isar or Flutter dependency, so it stays unit-testable. ShiftRepository is the only writer of stored totals, and any settings change runs recalculateAll so stored numbers cannot drift from current rates.",
+   "A whole-database JSON backup is type-checked in full before restore, and anything damaged, foreign or from a newer version is rejected before a row is touched; the restore then swaps the roster in a single Isar transaction.",
+   "Reminders and widgets",
+   "Shift reminders use exact alarms when Android grants them and fall back to inexact ones otherwise. Only the nearest 100 upcoming shifts are armed, because Android throws past 500 concurrent alarms; at 548 shifts a full reschedule takes 166 ms instead of 3.8 s and a crash.",
+   "Home screen widgets on Android and iOS receive the next two weeks of shifts as preformatted JSON, and native code picks the current and next shift against the clock, so the widget moves on with the app closed."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "N9-attendance",
+  "title": "N9Nrms",
+  "category": "Attendance Platform",
+  "status": "completed",
+  "featured": false,
+  "image": "/assets/projects-screenshots/nnineattendence/attendence_web1.png",
+  "github": "https://github.com/nnine-tech/nnine-attandance-app",
+  "frontend": [
+   "flutter",
+   "dart",
+   "sqlite"
+  ],
+  "backend": [
+   "node",
+   "express",
+   "postgres",
+   "docker"
+  ],
+  "summary": "N9Nrms is an attendance and leave system on Android, web and desktop. Employees can punch in and out only on the office network, apply for leave, and see their full attendance history in one app.",
+  "details": [
+   "N9Nrms is a cross-platform attendance system built with Flutter, designed for companies that need secure, accurate, and real-time attendance tracking. Employees can punch in/out only inside the office network, apply for leaves, receive notifications, and view their complete attendance history — all from one powerful app.",
+   "Secure multi-step authentication with login, signup, OTP verification, forgot password, and biometric authentication (Face/Touch ID). Uses Flutter Secure Storage for token protection.",
+   "Punch In / Punch Out",
+   "Employees can punch in and punch out only when connected to the office WiFi/network. Real-time tracking of attendance, late logs, and working hours.",
+   "Apply for half-day or full-day leaves, track leave status, view approved/accured leaves, and get updates instantly. Includes holiday notifications and push alerts via OneSignal and local notifications.",
+   "Employees can view and edit their profile details, update password, enable biometric login, and manage settings.",
+   "Cross-Platform Support",
+   "Built with Flutter — runs seamlessly on Web, Android, iOS, Windows, and macOS, with consistent UI and offline-first capabilities."
+  ],
+  "platforms": [
+   "mobile",
+   "web",
+   "desktop"
+  ],
+  "context": "work"
+ },
+ {
+  "id": "gridverse",
+  "title": "GridVerse",
+  "category": "Grid game collection",
+  "kind": "game",
+  "status": "completed",
+  "featured": true,
+  "image": "/assets/projects-screenshots/gridverse/screen-1.webp",
+  "live": "https://gridverse-hcw.web.app",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.gridverse",
+  "frontend": [
+   "flutter",
+   "dart",
+   "bloc",
+   "hive"
+  ],
+  "backend": [],
+  "summary": "A fully offline Flutter collection of fifteen grid games for Android and the web, covering puzzle, versus and arcade play. Each game keeps its rules in pure Dart behind a BLoC, and its board-game AIs run alpha-beta search off the UI thread.",
+  "details": [
+   "Fifteen games on one grid",
+   "Games are grouped as Puzzle (Memory Matrix, Merge 2048, Sudoku, Minesweeper, Lights Out, 15 Puzzle, Block Blast), Versus against a friend or the AI (Tic-Tac-Toe, Connect 4, Gomoku, Reversi, Dots & Boxes, Battleship) and Arcade (Snake, Simon).",
+   "Everything plays offline with no accounts or ads, and a daily challenge uses the date to pick the game and seed its puzzle, so everyone gets the same one without a server.",
+   "Sudoku, 2048, Minesweeper and 15 Puzzle save after every move and resume later, and a stats screen shows played, won, lost and win rate per game alongside achievements worked out from saved data.",
+   "Feature-first architecture",
+   "Each game keeps its domain logic in pure Dart with no Flutter imports, a bloc beside it as the state machine, and a thin presentation layer on top.",
+   "A gesture becomes a bloc event, pure domain functions return a new immutable state, and BlocBuilder rebuilds; blocs receive sound as a callback rather than the audio service, so tests never touch platform audio.",
+   "Scores and settings live in two Hive boxes holding only primitives, so no type adapters or code generation are needed, and the UI updates live through box.listenable().",
+   "Game engines and AI",
+   "Tic-Tac-Toe, Connect 4 and Gomoku share one engine parameterised by rows, columns, win length and gravity, and win checks scan only the four lines through the last move.",
+   "Their AI uses negamax with alpha-beta pruning and centre-first move ordering, runs through compute so the UI stays responsive, and discards stale results after a reset.",
+   "Sudoku removes digits only while a solution counter still finds exactly one solution, and Minesweeper lays its mines after the first tap so that tap always opens an area.",
+   "Design, audio and testing",
+   "Every interactive surface is built from Block3D, an extruded keycap that sinks when pressed and shows a gold focus ring for keyboard users; looping animations and confetti turn off with the OS reduce-motion setting.",
+   "Sound effects are synthesized .wav tones preloaded at startup, mixed with the user's music rather than taking audio focus, and audio failures are swallowed so sound can never crash a game.",
+   "Tests run against real Hive storage in a temporary directory, so persistence is exercised end to end."
+  ],
+  "platforms": [
+   "mobile",
+   "web"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "tools-hub",
+  "title": "Tools Hub",
+  "category": "Utility toolkit",
+  "status": "completed",
+  "featured": true,
+  "image": "/assets/projects-screenshots/toolshub/screen-1.webp",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.toolshub",
+  "frontend": [
+   "flutter",
+   "dart",
+   "bloc",
+   "hive",
+   "ffmpeg"
+  ],
+  "backend": [],
+  "summary": "An offline-first Flutter app bundling 167 utilities across ten categories, from converters and calculators to developer, security, media and device tools. Every tool is one entry in a central registry, and widgets, Quick Settings tiles and shortcuts deep-link straight into individual tools.",
+  "details": [
+   "What it covers",
+   "The app groups 167 tools into ten categories: converters, calculators, time and productivity, text, developer, security, QR and barcode, media, device, and random tools.",
+   "Every tool computes on the device; the network is used only by tools that are about the network, such as ping, throughput and port probing.",
+   "Tools can be browsed by category, searched, starred as favorites and reopened from recents. Exported media, PDF and icon files are collected in an output history, while security, QR and random tool output is deliberately kept out of it.",
+   "A privacy setting limits or hides tools that need camera, microphone or sensor permissions, and Firebase Crashlytics is the only network telemetry.",
+   "Entry points outside the app",
+   "Home screen widgets, Android Quick Settings tiles, iOS Control Center controls and long-press app icon shortcuts open tools directly through toolshub://open deep links handed to go_router.",
+   "Routes are written by hand in Kotlin, Swift, plist and Dart files, and a test fails if any of them stops matching the tool registry. When a tool opened this way is the only screen, back returns to Home rather than closing the app.",
+   "Native code is limited to these launch entry points: Android widget and tile providers in Kotlin and a WidgetKit extension on iOS.",
+   "Architecture",
+   "Every tool is one entry in a central registry, so adding a tool means a registry entry, a route and a widget in the matching feature folder.",
+   "State uses flutter_bloc with Bloc and Cubit, navigation uses go_router, and Hive stores settings, favorites, recents, the vault and time-tool data.",
+   "Tool logic lives in pure-Dart logic files that are unit-tested apart from the UI, with 185 tests across logic, widget and router behaviour.",
+   "Long-running FFmpeg and Syncfusion PDF jobs report real progress to a global task pill shown over any screen, and scheduled alarms survive a reboot while timers notify in the background."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "physicsverse",
+  "title": "PhysicsVerse",
+  "category": "Physics puzzle game",
+  "kind": "game",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/physicsverse/screen-1.webp",
+  "live": "https://physicsverse-hcw.web.app",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.physicsverse",
+  "frontend": [
+   "flutter",
+   "dart",
+   "flame",
+   "forge2d",
+   "bloc"
+  ],
+  "backend": [],
+  "summary": "A 2D physics puzzle game made of three games, each built on one physics idea, with 1,000 levels apiece. One Forge2D (Box2D v3) simulation runs natively via FFI on Android and iOS and as WebAssembly in the browser.",
+  "details": [
+   "Three games, three physics ideas",
+   "In Saucer Strike (projectile motion) the player drags a missile back along a cannon's rails, and a preview arc samples p₀ + v·t + ½·g·t² until it meets a block, a saucer or the ground.",
+   "In Tether Rescue (pendulum) a swipe cuts tractor-beam links and the astronaut swings on whatever beams remain, collecting O₂ cells on the way to a rescue pod.",
+   "In Shield Breaker (restitution) motorized flippers with angle limits and capped torque send balls into shield bumpers with restitution 1.5, so a ball leaves faster than it arrived.",
+   "One simulation on every platform",
+   "Each game is a Flame Forge2DGame on a shared base, laid out in meters on a 32 × 18 m level; a viewfinder fits the world to any screen, so game code never touches pixels.",
+   "forge2d 0.15 wraps Box2D v3 as native code via FFI on Android and iOS and as a WebAssembly module in the browser, so the same simulation runs everywhere.",
+   "The physics world reports events such as hits, destroyed targets, collected cells and drained balls to a per-game BLoC that owns score, ammo, combo, win or loss and the star rating.",
+   "Working around Box2D v3",
+   "Box2D v3 has no rope joint, so each tether is a chain of small bodies linked by DistanceJoints with a max-length limit, plus an anchor-to-astronaut joint that carries the load so the chain can't stretch.",
+   "With no PostSolve callback, block damage comes from hit events above an impact-speed threshold, so settling stacks survive and hard knocks don't.",
+   "Rope cutting tests the swipe segment against each link geometrically instead of ray casting, because thin links slip between rays.",
+   "Levels, rendering and storage",
+   "Each game has 1,000 levels in 40 chapters; the first three are hand-built and the rest are generated and verified by a level generator, with their solutions kept as tests that play every level headless on native Box2D.",
+   "Glows are layered strokes rather than blur filters, which cost an offscreen pass per draw on mobile GPUs, static scenery is recorded once as a Picture, and the whole cast is drawn in code with no image assets.",
+   "Stars and settings are kept in shared_preferences and never leave the device; levels are stored by index, so after release new levels can only be appended."
+  ],
+  "platforms": [
+   "mobile",
+   "web"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "receipts",
+  "title": "Receipts",
+  "category": "Resume skill verifier",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/skillverify/landing1.png",
+  "live": "https://skill-verifier.sakarchaulagain1.workers.dev",
+  "frontend": [
+   "ts",
+   "vite",
+   "cloudflare"
+  ],
+  "backend": [
+   "python",
+   "django",
+   "postgres",
+   "openrouter"
+  ],
+  "summary": "A web app that reads a PDF resume, pulls the author's public GitHub repositories, and lists each claimed skill next to the code that backs it, labelling the report as degraded when the free language models are unavailable.",
+  "details": [
+   "Evidence, not a score",
+   "A PDF resume is uploaded; PyPDF2 extracts the text, a language model pulls out the skill claims and GitHub username, and a regex finds the username directly when the PDF contains a github.com link.",
+   "For the ten most recent public repositories, the backend reads languages by bytes, README text and topics, then a language model compares the claims against that evidence.",
+   "The report lists verified skills with the repositories and files cited, names unverified skills plainly, and adds skills the code shows that the resume left out.",
+   "Each result is stored under an unguessable UUID with a content hash and the number of repositories actually read, and can be exported as PDF or JSON.",
+   "Visible degradation",
+   "The app runs on free, rate-limited models, so OPENROUTER_MODEL takes a list of models tried in turn and one busy provider does not sink a check.",
+   "When the models fail, it falls back to exact skill-name matching, marks the report degraded, and states at the top of the page that nothing was read from the code.",
+   "A sample report served by the frontend needs no backend or model quota, so the demo stays reachable when the daily quota is spent or the free backend host is asleep.",
+   "Engineering under free-tier limits",
+   "Uploads are capped at 5 MB and checked server-side to be PDFs, and the gunicorn timeout is raised because a verification makes about 16 GitHub calls and 4 model calls.",
+   "Django REST Framework throttle counters live in a Postgres-backed cache, because a per-process memory cache let a 5-per-hour limit allow 5 requests per worker, which was observed in production.",
+   "A JSON extractor finds the result inside chatty model replies while tracking string literals, so a bracket inside a value does not skew the match.",
+   "The backend's 21 regression tests each cover a bug that actually shipped, including language detection that silently returned nothing for every repository, and run on in-memory SQLite.",
+   "Stated limitations",
+   "The README and landing page state what the tool does not do: it cannot see private work, does not run or review code, has no real authentication, and its reports are readable by anyone holding the link."
+  ],
+  "platforms": [
+   "web"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "fancy-keyboard",
+  "title": "Fancy Keyboard",
+  "category": "Android keyboard",
+  "status": "completed",
+  "featured": true,
+  "image": "/assets/projects-screenshots/fancykeyboard/screen-1.webp",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.fancykeyboard",
+  "frontend": [
+   "kotlin",
+   "compose"
+  ],
+  "backend": [],
+  "summary": "A private Android keyboard that types in over 50 Unicode font styles in any app, with swipe typing, suggestions, handwriting and a Nepali layout. It ships with the INTERNET permission removed from its manifest, so nothing typed can leave the phone.",
+  "details": [
+   "A full keyboard with fancy fonts",
+   "Over 50 styles, including Bold Script, Gothic, Bubble, Double Struck, Small Caps and Upside Down, are made by swapping letters for lookalike Unicode characters, so they work wherever text does; styles the phone can't draw are hidden.",
+   "Password, email, web address, number, phone and date fields always get plain letters, so logins keep working.",
+   "It also covers swipe typing, suggestions and optional typo fixes from a 25,000-word offline English list, clipboard history, text shortcuts, handwriting, GIFs and an English/Nepali layout with Devanagari digits.",
+   "The look is configurable with 14 themes plus System, a gallery photo behind the keys, three key shapes, and full-width, one-handed or floating layouts with adjustable height.",
+   "Privacy by construction",
+   "The manifest removes the INTERNET permission so no library can add it back, and there are no accounts, ads, analytics or crash reporting.",
+   "Typed text is never written to disk apart from pinned items and text shortcuts; clipboard history lasts only until the keyboard stops, typing history is opt-in and memory-only, and sensitive fields are skipped.",
+   "Text shortcuts are encrypted with AES-GCM under a key held by the Android Keystore, and backups are turned off.",
+   "Android integration",
+   "The keyboard is an InputMethodService with its UI drawn in Jetpack Compose.",
+   "Settings are read directly from SharedPreferences because the saved font is needed before the first draw.",
+   "GIFs and images reach other apps through InputConnectionCompat.commitContent and FileProvider; SoundPool plays typing sounds and SensorManager drives optional shake gestures.",
+   "Offline trade-offs",
+   "Handwriting is read by a $P point-cloud recogniser written for the app, one letter at a time, since whole-word recognition would need a model download and therefore internet.",
+   "GIF search is left out because it would need internet, and fancy fonts are Latin-only because Unicode has no styled Devanagari."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "jhol-momo",
+  "title": "Chwasha Jhol MOMO",
+  "category": "Food Delivery",
+  "status": "completed",
+  "featured": false,
+  "image": "/assets/projects-screenshots/jholmomo/landing.png",
+  "frontend": [
+   "flutter",
+   "dart",
+   "figma"
+  ],
+  "backend": [
+   "node",
+   "ts",
+   "express",
+   "postgres"
+  ],
+  "summary": "Order food from a live menu with item customizations",
+  "details": [
+   "Cart management: add/remove items, adjust quantities, apply notes",
+   "Favorites: save preferred dishes for quick access",
+   "Place orders with Cash on Delivery (COD) option",
+   "Real-time order tracking & status updates (Accepted → Preparing → Out for delivery → Delivered)",
+   "Order details and history with receipts",
+   "Simple, responsive UI designed in Figma and implemented in Flutter",
+   "Backend built with Node.js + TypeScript (Express) and relational DB for orders & users",
+   "The app emphasizes clarity and speed—big tappable controls, concise order flow, and visual feedback for every action. Designs were created in Figma (components, tokens, and flows) and translated into reusable Flutter widgets for consistency across platforms.",
+   "Frontend: Flutter, Dart — single codebase for Android, iOS",
+   "Design: Figma — UI/UX, prototypes, and style system",
+   "Backend: Node.js, TypeScript, Express — REST API for orders, menus, users",
+   "Database: PostgreSQL  for reliable transactions"
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "work"
+ },
+ {
+  "id": "mindverse",
+  "title": "MindVerse",
+  "category": "Puzzle games",
+  "kind": "game",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/mindverse/screen-1.webp",
+  "live": "https://mindverse-hcw.web.app",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.mindverse",
+  "frontend": [
+   "flutter",
+   "dart",
+   "bloc",
+   "hive"
+  ],
+  "backend": [],
+  "summary": "A Flutter collection of seven word and logic puzzle games that plays fully offline on Android and the web, with no account or ads. Puzzle generation and rules live in pure-Dart domain code, and word lists load into a Trie built in an isolate.",
+  "details": [
+   "Seven games, one progression",
+   "The app bundles Word Connect, Crossword, Word Search, Word Guess, Cryptarithm, Hangman and Word Scramble.",
+   "Each game is an endless journey map of levels in named chapters, rated one to five stars, with hints and mistakes costing stars. A daily puzzle tracks a streak, and streak freezes cover missed days.",
+   "Stars and daily puzzles earn coins, which buy hints, extra tries, level skips, streak freezes and nine board themes. Coins cannot be bought with money.",
+   "Every game has a how-to sheet, and the app supports switchable sound and haptics, light, dark and system appearance, and phone, tablet and landscape layouts.",
+   "Offline by design",
+   "Progress, coins, themes, streak and settings live in a single Hive box and save as the player goes. The only data that leaves the device is an anonymous Crashlytics crash report from the Android build; the web build sends nothing.",
+   "Word lists load into a Trie built in an isolate, and the endless level order plays the first pass in order and reshuffles later passes.",
+   "Architecture and content pipeline",
+   "Each game has its own feature folder with pure-Dart domain code for puzzle generation and rules, a flutter_bloc layer for state, and presentation widgets, mirrored by 261 unit, bloc and widget tests.",
+   "Content comes from Dart generators: one rebuilds the dictionary from ENABLE, SCOWL and wordfreq, one searches for word sums with a unique solution to build the Cryptarithm pack, and one synthesizes the sound effects so there is no third-party audio to license.",
+   "Dev and prod flavors install side by side on Android, and the web build selects its flavor through a dart-define. Firebase Hosting serves the website, which carries the generated privacy policy."
+  ],
+  "platforms": [
+   "mobile",
+   "web"
+  ],
+  "context": "personal",
+  "featured": true
+ },
+ {
+  "id": "partyverse",
+  "title": "PartyVerse",
+  "category": "Party games",
+  "kind": "game",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/partyverse/screen-1.webp",
+  "live": "https://partyverse-game.web.app",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.partyverse",
+  "frontend": [
+   "flutter",
+   "dart"
+  ],
+  "backend": [
+   "firebase"
+  ],
+  "summary": "A collection of 19 board, dice and card games for 2 to 8 players, with bots for every seat. Matches run on one device, on local Wi-Fi, or online in Firebase Realtime Database rooms that phones and browsers join by code, link or QR.",
+  "details": [
+   "Four ways to play",
+   "The collection has 6 board and dice games and 13 card games for 2 to 8 players, each with a How to play page covering the rules, a worked example and the current match's rules.",
+   "Vs bots mode sets one level for every bot, and Setup remembers the choices per game. Same device mode passes the phone between turns with hands kept hidden.",
+   "Local network play connects phones on the same Wi-Fi through a room list or a typed room code. Browsers cannot open LAN connections, so this mode is Android-only.",
+   "Online play lets a host share a room code, link or QR code, and phones and browsers join the same lobby and game. On Android, the join link opens the installed app through the site's asset links file.",
+   "Multiplayer engineering",
+   "Online rooms are kept in Firebase Realtime Database with anonymous sign-in, so there are no accounts and no names stored beyond the room.",
+   "The host sets house rules, which guests see read-only before the start, can fill empty seats with bots, and can remove a player before the match begins.",
+   "In local network play, a player who drops out mid-match is replaced by a Medium bot, and the results say who left.",
+   "Peers on a different protocol version are rejected, and the app tells the player that the host runs a different version of PartyVerse.",
+   "Platforms and accessibility",
+   "Android runs all four modes; the web runs vs bots, same device and online, and hides local network play.",
+   "Settings include sound, vibration, reduced motion, high contrast and first-game hints, and Esc pauses a match on the web.",
+   "On the web, Chess and Bagh-Chal support keyboard play: Tab moves between squares, and Enter or Space picks up and places a piece."
+  ],
+  "platforms": [
+   "mobile",
+   "web"
+  ],
+  "context": "personal",
+  "featured": true
+ },
+ {
+  "id": "fancy-text",
+  "title": "Fancy Text",
+  "category": "Unicode text generator",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/fancytext/screen-1.webp",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.fancytext",
+  "frontend": [
+   "flutter",
+   "dart"
+  ],
+  "backend": [],
+  "summary": "An offline Flutter app for Android that shows text in 60 Unicode styles at once, plus symbols, frames and shareable image cards. Its style engine is a set of pure string converters, reversed through a glyph index to detect a text's style.",
+  "details": [
+   "Fonts, symbols and image cards",
+   "Typed text appears in 60 styles with live previews, grouped into categories such as Script & Gothic, Bubble & Box, World Scripts and Decorated, and tapping a card copies it.",
+   "Create tools add frames and templates, a name generator for gamer names, invisible text, a Style Studio that mixes fonts letter by letter, a font finder, a text repeater and an image card editor that exports a PNG to share.",
+   "A symbol library holds 641 symbols in 18 sets, and Saved keeps favourites plus the last 20 copied texts.",
+   "Fancy Text appears in Android's Share menu and text-selection menu, so text from other apps opens straight in Fonts.",
+   "The style engine",
+   "Fancy text is ordinary Unicode, so each style is a plain String Function(String) that maps Latin letters to lookalike characters from other Unicode blocks.",
+   "Font detection reverses the engine with an index from every single-code-point, non-ASCII output glyph back to its style and letter, then names the styles used and rebuilds the plain text; plain text never matches, so normal words aren't misreported.",
+   "Country flags are generated from ISO 3166 codes as pairs of regional-indicator letters.",
+   "A length counter checks names against UTF-16 length, because games count most fancy letters as two units.",
+   "State and platform integration",
+   "There is no state-management package: app state is a handful of top-level ValueNotifiers read with ValueListenableBuilder and written through to shared_preferences on every change.",
+   "The five sections live in an IndexedStack so each keeps its scroll and input, behind a floating menu that hides while scrolling and can be dragged anywhere.",
+   "A Kotlin MainActivity handles the shared-text channel, haptics and the copy sound, and runs as singleTask so sharing into a running app reuses it instead of opening a second copy that could overwrite saved data.",
+   "Startup loads saved data and starts Crashlytics in parallel with a 5-second timeout so a slow start never holds the first frame, and the app runs normally if Firebase can't start."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "personal",
+  "featured": true
+ },
+ {
+  "id": "quotely",
+  "title": "Quotely",
+  "category": "Quotes app",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/quotely/screen-1.webp",
+  "play": "https://play.google.com/store/apps/details?id=com.himalayancodeworks.quotely",
+  "frontend": [
+   "flutter",
+   "dart"
+  ],
+  "backend": [],
+  "summary": "An Android app of Nepali and English quotes, status lines and captions with nearly 13,000 bundled texts, built to run with no account, no ads and no internet permission, keeping all data and fonts on the device.",
+  "details": [
+   "Content and modes",
+   "Texts span 21 categories, from Nepali riddles, proverbs, muktak and wishes to global motivation, captions and fun facts, and every Nepali text has an English translation.",
+   "Swipe mode shows one text per screen in a reels-style feed, with tap-to-reveal riddles and jokes, scoring, and double-tap to save.",
+   "Search works in either language, alongside favourites, user-written texts with file backup, read-aloud, and an optional daily quote notification.",
+   "Image maker and font styles",
+   "Any line can be turned into a shareable image over a gradient or the user's own photo, with 12 fonts including 5 Devanagari, a language choice, size, alignment and a watermark.",
+   "Text can also be copied in 18 Unicode styles that keep their look when pasted into other apps.",
+   "Offline and private",
+   "Content ships as per-category JSON assets and every font is bundled, so the app needs no internet permission and downloads nothing.",
+   "Favourites, user texts and settings stay on the phone in shared_preferences, with no analytics, ads or crash reporting.",
+   "Light and dark themes are designed for every screen, and animations, haptics and sounds can each be switched off.",
+   "Build and release",
+   "Separate dev and prod Android flavors let a dev build install beside the Play Store build.",
+   "The app icon, splash, store graphics, framed screenshots and privacy page are generated from one script, and tests check content loading, backups, the font-style mappings and that every font in use is bundled."
+  ],
+  "platforms": [
+   "mobile"
+  ],
+  "context": "personal",
+  "featured": true
+ },
+ {
+  "id": "devsim",
+  "title": "DevSim",
+  "category": "Responsive device simulator",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/devsim/screen-1.webp",
+  "live": "https://devsimulator.netlify.app",
+  "frontend": [
+   "react",
+   "ts",
+   "vite",
+   "tailwind"
+  ],
+  "backend": [],
+  "summary": "A browser-based responsive simulator that renders one URL in many device-sized iframes side by side, and captures screenshots of cross-origin pages through the Screen Capture API instead of DOM snapshots.",
+  "details": [
+   "One URL across devices",
+   "A localhost or live URL is entered once and rendered on several devices at the same time, each in a real iframe sized to the device's CSS viewport and scaled with a CSS transform so the page lays out as it would on that device.",
+   "The picker offers 35 presets across iPhone, Android, foldable, iPad, tablet and desktop shelves, plus custom sizes from 100 to 5000 px, favourites and drag-to-reorder.",
+   "Viewports that overflow the canvas width move onto extra pages rather than shrinking, and orientation, zoom, bezel and theme controls apply to every device at once.",
+   "Everything runs in the browser, so requests to a local dev server are resolved by the user's own machine and never pass through a server.",
+   "Capture without DOM access",
+   "Cross-origin iframes block DOM-snapshot libraries, so screenshots come from getDisplayMedia: the browser composites the real pixels, and each viewport is cropped from the tab capture onto a canvas and encoded as PNG.",
+   "Shoot all pages through the canvas, captures every viewport and bundles the PNGs into one ZIP written without a dependency, storing entries uncompressed because PNGs are already compressed.",
+   "The same capture stream feeds MediaRecorder to record the canvas as video, and no frames leave the machine.",
+   "Shareable state",
+   "Devices, order, orientation, zoom, bezels and theme are encoded in the query string, writing only non-default values, so a copied link reopens the exact setup.",
+   "Every field is validated on read, with unknown devices or zoom levels falling back to defaults, and because there is no client-side router the static build needs no SPA rewrite rule.",
+   "Deliberate limits",
+   "Synchronised scrolling and full-page capture are left out because browsers block reading or setting a cross-origin iframe's scroll state, and a header-stripping proxy for sites that refuse framing was rejected as an open relay that would need SSRF protection."
+  ],
+  "platforms": [
+   "web"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "worklist",
+  "title": "Worklist",
+  "category": "Kanban board",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/worklist/screen-1.webp",
+  "live": "https://workslists.netlify.app",
+  "frontend": [
+   "ts",
+   "vite",
+   "indexeddb"
+  ],
+  "backend": [],
+  "summary": "A keyboard-first kanban board that runs entirely in the browser with no account, server or network calls; boards and file attachments stay on the device, and imported rich text passes through a tested HTML allowlist.",
+  "details": [
+   "Board and workflow",
+   "Work is organised into workspaces, one per company, client or project, each with its own categories, tasks and board, across four columns: Backlog, Todo, In Progress and Done.",
+   "An All view shows every category on one board, and tasks carry P0 to P3 priorities, due dates with overdue highlighting, saved colour labels, and rich-text titles and notes.",
+   "Attachments of any type are stored on the device in IndexedDB; images and PDFs preview, video and audio play, and text files open in place.",
+   "Export produces JSON as the full backup, attachment files included, or Markdown as a reading copy, and import replaces the board only after confirmation and can be undone.",
+   "Keyboard-first input",
+   "Cards move between columns with the 1 to 4 keys, and a Cmd/Ctrl+K command palette jumps to categories, searches tasks and moves the selected one.",
+   "Shortcut labels switch between Ctrl and Cmd by platform, digits are read from the physical key so Shift and non-QWERTY layouts work, and Alt+digit is avoided because Firefox on Windows uses it to switch tabs.",
+   "Local-first with few dependencies",
+   "The app has six runtime dependencies: dialogs and the command palette use the native dialog element, rich text uses contenteditable, IDs come from crypto.randomUUID(), and there is no router or UI component library.",
+   "On load it calls navigator.storage.persist() to ask the browser to exempt its storage from eviction, which is best-effort, so the JSON export remains the dependable backup.",
+   "Workspace and category tints recolour text using WCAG contrast maths, verified by tests across six colours, both themes and the full tint range.",
+   "Untrusted input paths",
+   "Imported rich text passes through a fixed tag allowlist that removes script and iframe elements, strips every attribute and revalidates colours, and import rejects tasks that point at missing categories.",
+   "Imported attachments are re-typed before getting a blob URL, so anything that is not a real image, video or audio type becomes PDF or a generic binary and is offered as a download rather than opened as a page on the app's origin.",
+   "A Content-Security-Policy limits scripts and connections to the app's own origin and allows blob: URLs only for images, media and frames."
+  ],
+  "platforms": [
+   "web"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "shake-context",
+  "title": "shake_context",
+  "category": "Flutter package",
+  "kind": "package",
+  "status": "completed",
+  "pub": "https://pub.dev/packages/shake_context",
+  "github": "https://github.com/sacarsacar/shake_context",
+  "frontend": [
+   "flutter",
+   "dart"
+  ],
+  "backend": [],
+  "summary": "A Flutter package that opens a bug-report surface when the device is shaken, with the mode chosen by build channel: a diagnostic overlay for engineers and QA, or a privacy-first feedback sheet for production users.",
+  "details": [
+   "Two surfaces from one widget",
+   "Shaking the device opens a bug-report overlay whose form depends on the build: a diagnostic dashboard for engineers and QA, or a feedback sheet for production users.",
+   "In developer mode a screenshot, the current route, a device snapshot and the rolling log buffer are captured the moment a shake fires; production mode returns only the text the user typed and the images they approved.",
+   "Both modes report through a single onReportSubmitted callback, and the package never uploads anything itself, leaving transport to the host app.",
+   "Every visible string in the production sheet can be overridden for localization, and both surfaces take their colours from the host app's theme unless a ReportTheme overrides them.",
+   "Build-aware mode selection",
+   "InspectMode.resolve() returns production mode only for a release build of a production flavor, so a release-signed internal build, such as a TestFlight QA track, keeps the diagnostic overlay.",
+   "Shake detection reads the accelerometer through sensors_plus with a tunable threshold, spike count, rolling window and cooldown, and can be switched on or off at runtime without rebuilding the app.",
+   "Platforms without an accelerometer (desktop and web) open the overlay through ShakeContext.triggerReport instead.",
+   "Diagnostics capture",
+   "ShakeContext.guard hooks print, debugPrint, FlutterError.onError and PlatformDispatcher.onError so the overlay also sees third-party logger output and uncaught async errors.",
+   "Optional Dio and http adapters feed a Network panel, and captured headers and bodies pass through a configurable redaction policy before they are stored.",
+   "Opt-in crash recovery persists the previous session's log and network buffers so the next session's overlay can show what happened before a crash.",
+   "Delivery and failure handling",
+   "Reports serialize to JSON with images excluded by default so they can travel as multipart uploads, or with images inlined as base64 when one self-contained payload is needed.",
+   "An opt-in retry queue writes failed reports to the app support directory, replays them after the next launch, and caps the queue by entry count and age; concurrent replay calls share one in-flight future so no report is sent twice."
+  ],
+  "platforms": [],
+  "context": "personal"
+ },
+ {
+  "id": "mirror-skeleton",
+  "title": "mirror_skeleton",
+  "category": "Flutter package",
+  "kind": "package",
+  "status": "completed",
+  "pub": "https://pub.dev/packages/mirror_skeleton",
+  "github": "https://github.com/sacarsacar/mirror_skeleton",
+  "frontend": [
+   "flutter",
+   "dart"
+  ],
+  "backend": [],
+  "summary": "A Flutter package that turns any widget tree into a shimmer loading skeleton by walking the laid-out RenderObject tree at paint time, so bones match the real UI's positions and sizes without a hand-maintained placeholder tree.",
+  "details": [
+   "Skeletons from the render tree",
+   "Wrapping a subtree in MirrorSkeleton with an isLoading flag is the only setup; while loading, the same tree is inspected at paint time and each visible element is replaced with a bone at its exact position and size.",
+   "Because bones come from the real layout, UI edits carry over to the loading state automatically, and the loaded content lands in the same coordinates without layout shift.",
+   "SkeletonIgnore opts a subtree out, keeping elements such as logos, hero images or navigation visible during loading.",
+   "Widget-aware bone shapes",
+   "Multi-line text produces one bone per wrapped line at its actual width, and ClipRRect or ClipOval shapes carry down to the images inside them.",
+   "Buttons, chips, avatars and form controls get bones shaped like the real widget, such as a pill track and thumb for a Switch or a stroked ring for a Radio.",
+   "Leaf CustomPaint widgets are classified by aspect ratio, so small square charts become circle bones and wide charts become a row of bar bones.",
+   "Progress indicators, and third-party render objects whose class names contain Progress, Loader or Spinner, are skipped so an existing spinner stays visible.",
+   "Runtime behaviour",
+   "Four animation styles (shimmer, pulse, fade, wave) and four sweep directions are available, with the bone colour derived from the theme's primary colour when none is given.",
+   "While the skeleton is shown, hit testing is absorbed and semantics are replaced by a single loading live region for screen readers.",
+   "The shimmer stops when reduced motion is requested, pauses inside disabled TickerMode subtrees such as off-screen tabs, and slows automatically when sampled frame timings show dropped frames.",
+   "Once the crossfade to real content completes, the bone list and descendant cache are cleared so the render object stops holding descendants in memory."
+  ],
+  "platforms": [],
+  "context": "personal"
+ },
+ {
+  "id": "flutter-easy-messages",
+  "title": "flutter_easy_messages",
+  "category": "Flutter package",
+  "kind": "package",
+  "status": "completed",
+  "pub": "https://pub.dev/packages/flutter_easy_messages",
+  "github": "https://github.com/sacarsacar/flutter_easy_messages",
+  "frontend": [
+   "flutter",
+   "dart"
+  ],
+  "backend": [],
+  "summary": "A Flutter package for toast notifications and snackbars that can be shown without a BuildContext through a registered navigator key, with request-ID tracking for toasts tied to long-running API operations.",
+  "details": [
+   "Toasts and snackbars",
+   "Four pre-styled message types (error, success, info, warning) cover common cases, with per-message control over colour, icon, typography, duration and offset.",
+   "Toasts can be placed in nine screen positions, and snackbars size themselves for mobile, tablet and desktop widths.",
+   "Multiple messages either replace the visible toast or queue and show in order, and duplicate messages are suppressed.",
+   "Global defaults are set once through EasyMessageConfig, and any individual call can override them.",
+   "Long-running operations",
+   "Persistent toasts stay on screen until dismissed and can be tagged with a request ID, which ToastManager uses to count or clear every toast tied to that request.",
+   "Toasts can carry action buttons such as Retry or Cancel, and an expandable error-details section the user opens on demand.",
+   "onShown and onDismissed callbacks let the app react to a toast's lifecycle, for example to start or stop related work.",
+   "Context-free and platform integration",
+   "Registering the app's navigator key once lets services, utilities and API layers show toasts without a BuildContext.",
+   "Optional haptic feedback uses Flutter's built-in HapticFeedback, so it adds no dependency or Android permission and silently does nothing on platforms without haptic hardware.",
+   "The haptic variant is derived from the message type unless one is set explicitly, and messages carry semantic labels for screen readers."
+  ],
+  "platforms": [],
+  "context": "personal"
+ },
+ {
+  "id": "dairy-management-system",
+  "title": "Dairy Management System",
+  "category": "Dairy management suite",
+  "status": "completed",
+  "featured": false,
+  "image": "/assets/projects-screenshots/dairy/landing.jpg",
+  "github": "https://github.com/sacarsacar/diary_6thsem/tree/dev/apps",
+  "frontend": [
+   "flutter",
+   "dart",
+   "bloc",
+   "figma"
+  ],
+  "backend": [
+   "firebase",
+   "node",
+   "onesignal"
+  ],
+  "summary": "A dairy business system split into three Flutter apps (Android admin/farmer, Android customer and Windows admin) sharing one Firebase backend. Search, anomaly detection and a hybrid recommender run on-device in Dart to stay within Firebase's free plan.",
+  "details": [
+   "Three apps, one backend",
+   "Built as a 6th-semester project, the system digitizes a dairy's daily operations: milk collection from farmers, product sales to customers, wallet and exchange handling, orders, 1:1 chat and notifications.",
+   "One Android app serves admins and farmers, choosing which shell to mount from the user's role after login; a second Android app serves customers; and a Windows desktop app serves admins and a superadmin who manages admin accounts.",
+   "All three apps share models and algorithms through a local dairy_core package, use flutter_bloc with Cubits for state, and read and write the same Firestore schema.",
+   "Farmers, wallets and orders",
+   "Every milk entry creates an append-only wallet transaction for the farmer, written together with the new balance in a Firestore batch, and the farmer is notified of every balance change.",
+   "Farmers spend their wallet balance on an exchange catalog through a request and admin-approval flow, while customers browse, search, order and pay through eSewa, with orders moving from pending to delivered.",
+   "Admins generate PDF invoices and export reports to Excel.",
+   "On-device algorithms",
+   "Work that would normally be a server job runs client-side in Dart to stay within the Firebase Spark free plan, with the algorithm cores unit-tested in isolation.",
+   "The customer home feed uses a hybrid recommender that blends content-based scoring from the user's cart and favourites with collaborative filtering by cosine similarity over a capped orders scan, and falls back to popularity ranking when there is no personal signal.",
+   "Product search uses TF-IDF with Levenshtein fuzzy matching and voice search, and a z-score check on milk-quantity entries flags likely typos.",
+   "Security model",
+   "Firestore rules require authentication everywhere, scope admin writes to the admin's own data, block cross-user reads, and make chat messages and wallet transactions immutable.",
+   "Server-side secrets such as the OneSignal REST key and eSewa merchant secret live only in Firebase Functions secrets, and the apps call Node.js Cloud Functions to send pushes and verify payments.",
+   "Chat bodies are AES-128 encrypted client-side with a random per-message IV, but every client loads the same bundled key, so the README documents it as obfuscation rather than end-to-end encryption."
+  ],
+  "platforms": [
+   "mobile",
+   "desktop"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "portfolio",
+  "title": "My Portfolio",
+  "category": "Portfolio",
+  "status": "completed",
+  "image": "/assets/projects-screenshots/portfolio/landing.png",
+  "frontend": [
+   "ts",
+   "next",
+   "tailwind",
+   "spline"
+  ],
+  "backend": [],
+  "summary": "Welcome to my digital playground, where creativity meets code in the dopest way possible.",
+  "details": [
+   "Did you see that 3D keyboard modal? Yeah! I made that. That interactive keyboard is being rendered in 3D on a webpage 🤯, and pressing each keycap reveals a skill in a goofy way.",
+   "Dark background + floating particles = out-of-this-world cool.",
+   "My top personal Projects.",
+   "Thanks for Visiting.."
+  ],
+  "platforms": [
+   "web"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "Multi_Cloud",
+  "title": "Multi Cloud",
+  "category": "Clouds Management",
+  "status": "in-progress",
+  "image": "/assets/projects-screenshots/multicloud/auth.png",
+  "frontend": [
+   "flutter",
+   "dart",
+   "hive",
+   "auth0"
+  ],
+  "backend": [
+   "node",
+   "go",
+   "postgres",
+   "docker"
+  ],
+  "summary": "Multi Cloud is an all-in-one cloud management platform built with Flutter. It lets you monitor, manage, and control multiple cloud infrastructures — AWS, Azure, GCP, IBM Cloud, and Oracle Cloud — in a single unified dashboard.",
+  "details": [
+   "Track server locations in real time, view machine health, toggle server states, and manage your entire multi-cloud architecture effortlessly with a smooth and modern UI.",
+   "Multi-Cloud Dashboard",
+   "A unified control center for AWS, Azure, GCP, IBM, and Oracle Cloud. Instantly check server uptime, performance, alerts, and system status. No more switching tabs — everything is finally in one place.",
+   "Powered by Flutter Maps, visually explore your server locations across the globe. Tap any server to view its status, logs, and metadata.",
+   "Server Control Panel",
+   "Need to update server status? Restart a machine? Mark a system as active or inactive? The app offers full control with secure role-based access.",
+   "Enterprise-grade authentication including login, biometric unlock, 2-step verification, OTP-based access, and encrypted Hive storage for local data. Safety is built into every layer.",
+   "Frontend is powered by Flutter + Riverpod + Go Router for smooth navigation flows. Backend uses Go and Node.js services working together, with PostgreSQL for reliable cloud data storage.",
+   "Clean hexagonal UI patterns, modern animations, custom typography (Lexend), and buttery-smooth transitions. Designed for maximum clarity and minimal cognitive load — perfect for enterprise monitoring.",
+   "Multi Cloud is built for DevOps teams, cloud engineers, administrators, and enterprises managing large-scale distributed infrastructure.",
+   "It's not just another monitoring tool — it’s your control tower for the entire cloud universe."
+  ],
+  "platforms": [
+   "mobile",
+   "web"
+  ],
+  "context": "work"
+ },
+ {
+  "id": "sperium-lounge",
+  "title": "BhansaGhar",
+  "category": "Restaurant platform",
+  "status": "in-progress",
+  "featured": false,
+  "image": "/assets/projects-screenshots/sperium-lounge/home.jpg",
+  "github": "https://github.com/nnine-tech/sperium-lounge",
+  "frontend": [
+   "flutter",
+   "dart",
+   "hive",
+   "sockerio",
+   "html",
+   "css",
+   "js"
+  ],
+  "backend": [
+   "dart",
+   "django"
+  ],
+  "summary": "BhansaGhar is a restaurant ordering platform for lounges, cafés and small food spots that works offline over the restaurant’s local network or online through the cloud, with WebSocket order updates under 50 ms. Customers join the Wi-Fi, scan a QR code and order from a live menu in their browser, while in local mode the admin device hosts the HTTP and WebSocket server itself.",
+  "details": [
+   "Built for speed, privacy, and a smooth customer experience, BhansaGhar includes:",
+   "Fully offline local ordering — no internet required",
+   "Local HTTP server + Socket.IO real-time updates",
+   "QR-based menu access for customers",
+   "Live order tracking with instant staff updates",
+   "Cart, checkout, and responsive web UI",
+   "Hive-based local database for orders & menu",
+   "The admin app (Flutter) acts as the hub of the entire ecosystem. It hosts the server, manages the live menu, and receives customer orders in real time. Staff can update order statuses, modify the menu, and monitor activity—all through a smooth and responsive interface.",
+   "Customers simply join the lounge Wi-Fi and scan the QR code. The menu opens instantly in their browser—no installation needed. They browse, pick items, customize, and place orders with a clean and minimal web UI powered by HTML, CSS, and JavaScript (served locally).",
+   "Real-Time Order Flow (Socket.io)",
+   "Socket.IO handles instantaneous communication between customers and the admin device. When a customer submits an order, it appears on the admin dashboard immediately. As the staff prepares the order, status updates are pushed live back to the customer.",
+   "Local HTTP & WebSocket Server",
+   "Designed with a lounge-themed aesthetic—dark tones, smooth transitions, and crisp visual hierarchy. Both the admin and the customer interface focus on clarity, simplicity, and speed. Zero clutter. Zero lag.",
+   "BhansaGhar isn’t just a food ordering system—it’s a complete, self-contained digital experience optimized for modern cafés and lounges. With real-time technology, offline reliability, and no cloud costs, it delivers a fully controlled and high-performance ordering workflow."
+  ],
+  "platforms": [
+   "mobile",
+   "web"
+  ],
+  "context": "work"
+ },
+ {
+  "id": "Lms_app",
+  "title": "LMS App",
+  "category": "E-learning Application",
+  "status": "in-progress",
+  "image": "/assets/projects-screenshots/lms/lmshome.png",
+  "frontend": [
+   "flutter",
+   "dart",
+   "sqlite"
+  ],
+  "backend": [
+   "node",
+   "express",
+   "mongo"
+  ],
+  "summary": "A complete, production-ready Learning Management System (LMS) built with Flutter on the front end and a Node/Express + MongoDB backend. Designed for course creators, students, and institutions — the app supports video streaming, quizzes, purchases, progress tracking, content recommendations, certificate generation, and more.",
+  "details": [
+   "Authentication & Access",
+   "Secure sign-in with Google Sign-In, email/password flow, and token-based sessions. Role-based access for students, instructors, and admins. DRM-style recording restrictions and playback controls prevent unauthorized screen recording or downloads for protected content.",
+   "Course Catalogue & Preview",
+   "Browse courses with rich metadata — syllabus, instructor bio, ratings, previews, and sample lessons. Users can preview a portion of any paid course before purchasing.",
+   "Video Streaming & Playback",
+   "Smooth adaptive video streaming with in-app player controls (seek, speed, captions). Playback includes protections (recording restriction, overlay watermarking) and resumable progress tracking so users can pick up where they left off.",
+   "Quizzes & Assessments",
+   "Create formative and summative quizzes with multiple question types: single/multiple choice, true/false, short answer. Auto-grading, manual review, time limits, and result analytics included.",
+   "Purchase & Monetization",
+   "In-app purchases for courses with secure checkout flows, promo codes, and price tiers. Purchase history and receipts are available in the user dashboard.",
+   "Progress Tracking & Streaks",
+   "Track course progress, lesson completion, daily learning streaks, and time-spent metrics. Visual dashboards help learners stay motivated.",
+   "Recommendations & Content Suggestion",
+   "Personalized course recommendations using engagement signals (completed lessons, quiz performance, categories). Suggested next-steps appear on the course detail and home screens.",
+   "Ratings, Reviews & Certificates",
+   "Students can rate and review courses. Upon successful completion, the system can generate downloadable/verifiable certificates (PDF) with course metadata and cryptographic signature options for validity.",
+   "Offline & Local Data",
+   "Local caching with SQLite stores progress, bookmarks, and downloaded preview assets. Works offline for viewing cached lessons and quizzes; syncs when connectivity is restored.",
+   "Frontend: Flutter + BLoC for predictable state management",
+   "Backend: Node.js + Express API with MongoDB for flexible schema",
+   "Video hosting/streaming: CDN or self-hosted HLS endpoints",
+   "Auth: Google Sign-In + JWT sessions",
+   "Storage: MongoDB for server data, SQLite for local cache",
+   "Payments: Integrate Stripe / platform-specific stores",
+   "Clean course cards, accessible player controls, keyboard navigation, subtitles support, and responsive layout for mobile/tablet/desktop.",
+   "LMS App is a full-featured learning platform ready for production: content creators can publish courses, admins manage catalog & monetization, and learners get a delightful, secure learning experience end-to-end."
+  ],
+  "platforms": [
+   "mobile",
+   "web"
+  ],
+  "context": "work"
+ },
+ {
+  "id": "school-management-system",
+  "title": "School Management System",
+  "category": "School accounting software",
+  "status": "in-progress",
+  "frontend": [
+   "flutter",
+   "dart",
+   "bloc",
+   "drift",
+   "sqlite"
+  ],
+  "backend": [],
+  "summary": "An offline Flutter desktop app for school accounting and administration in Nepal, with Bikram Sambat dates and Devanagari PDFs. Records live in a SQLite database encrypted at rest, with an insert-only, hash-chained payment ledger.",
+  "details": [
+   "Built for schools in Nepal",
+   "The app runs on a single machine with no server, internet or subscription, and prints the paperwork a school hands out: fee bills, receipts, marksheets, ID cards, salary slips, certificates and question papers.",
+   "Dates can be shown and entered in Bikram Sambat or AD, and Noto Sans Devanagari is embedded in every generated PDF so Nepali names print correctly.",
+   "Fee bills print all 16 fee heads in the fixed order of the standard pre-printed form, with school and parent copies, prior dues rolled into a grand total and the amount spelled out in words.",
+   "Tables export to XLSX and to CSV with a UTF-8 BOM, so Excel opens Nepali names correctly.",
+   "Security and integrity",
+   "The database is encrypted with SQLite3MultipleCiphers using a 256-bit key generated by a CSPRNG on first run and kept in the macOS Keychain or the Windows credential store, never in the database.",
+   "Passwords are stored as bcrypt hashes behind a lockout policy, an unrecognised stored role falls back to the least-privileged one, and sessions return to the login screen after 10 minutes without activity.",
+   "Payments are insert-only, corrections are reversing entries, each row carries a hash chained to the previous one, and an audit log records before-and-after snapshots of every sensitive change.",
+   "Data model and backup",
+   "Money is stored as integer minor units, never floats, and balances are derived from billed minus paid, so overpayment becomes carried-forward credit.",
+   "Invoice items and question papers are snapshots, so editing a fee structure or a question bank never changes historical documents.",
+   "Backups checkpoint the write-ahead log, copy the encrypted file with a checksum and prune to a rolling limit; a restore is verified and staged, then applied on the next start before the database opens.",
+   "Architecture",
+   "Each feature follows clean architecture with domain, data and presentation layers, using BLoC and Cubit for state, get_it for dependency injection, go_router for navigation and Drift for the database.",
+   "On macOS every print goes through an in-app preview page, because calling the print dialog directly deadlocks when the platform and UI threads are merged."
+  ],
+  "platforms": [
+   "desktop"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "samatwo-school-website",
+  "title": "Samatwo Sikshya Pathashala Website",
+  "category": "School website",
+  "status": "in-progress",
+  "frontend": [
+   "html",
+   "css",
+   "js"
+  ],
+  "backend": [],
+  "summary": "A bilingual English and Nepali single-page website for a preschool and basic school in Nepal, built in plain HTML, CSS and JavaScript with a data-attribute translation engine and no build step or dependencies.",
+  "details": [
+   "Site content",
+   "The single page covers a hero, trust strip, about, programs, why-us, a school-life gallery, an admissions enquiry form, contact details and a footer.",
+   "The gallery is a filterable grid of photos and videos with a lightbox; video tiles get a play badge automatically, and tiles can span two rows or two columns.",
+   "Images that fail to load fall back to a coloured placeholder or gradient instead of leaving a broken tile.",
+   "Bilingual by design",
+   "All copy lives in English and Nepali dictionaries, and elements are tagged with data-i18n attributes, with separate attributes for input placeholders and gallery captions.",
+   "A language switcher in the navigation remembers the visitor's choice in localStorage, Nepali visitors are detected automatically, and Nepali text renders in the Mukta Devanagari font.",
+   "Accessibility and reach",
+   "The layout is responsive with an off-canvas mobile menu, and includes a skip link, ARIA labels, a keyboard-closable menu and reduced-motion support.",
+   "SEO and social meta tags are included, and the school's Facebook, Instagram and TikTok accounts are linked.",
+   "Current state",
+   "Contact details, the map and the photos are still placeholders, and the enquiry form only shows a thank-you message until it is connected to a backend, email service or Google Form."
+  ],
+  "platforms": [
+   "web"
+  ],
+  "context": "personal"
+ },
+ {
+  "id": "fire-alert-app",
+  "title": "Fire Alert App",
+  "category": "Disaster Management",
+  "status": "in-progress",
+  "image": "/assets/projects-screenshots/firealertsystem/dashboard.jpg",
+  "github": "https://github.com/sacarsacar/fire-alert-system/tree/dev/frontend/fire_alert_admin",
+  "frontend": [
+   "flutter",
+   "dart",
+   "hive"
+  ],
+  "backend": [
+   "python",
+   "postgres",
+   "fastapi"
+  ],
+  "summary": "Fire Alert System is a mobile + backend solution for rapid reporting, dispatching, and management of fire incidents. It connects citizens, dispatchers (middlemen), and fire brigades through a secure, realtime workflow — from incident reporting to resolution — and uses shortest-path algorithms to route responders efficiently.",
+  "details": [
+   "A three-role system (User / Middleman / Admin) with:",
+   "Report creation (photos, video, GPS) from mobile users",
+   "Auto-assignment to nearest station using graph algorithms",
+   "Real-time notifications to responders and status updates to reporters",
+   "Admin dashboard for station & incident management, analytics, and logs",
+   "Quick incident reporting with GPS, photo/video upload, and severity input",
+   "Real-time status lifecycle: Pending → Assigned → En Route → Resolved",
+   "Nearest-station auto-assign (Dijkstra / A* support) and route visualization",
+   "Push notifications (OneSignal / FCM) for responders and users",
+   "Admin dashboard: map view, filters (severity, time), and analytics",
+   "Image upload + CDN (Cloudinary) integration for media handling",
+   "Recording restriction / DRM-style protections on sensitive streams",
+   "Offline support & local caching with Hive",
+   "Routing & dispatch rely on graph representations of the road network. Use-cases include nearest-station search (Dijkstra / BFS), route optimization (A*), and prioritized queues using heaps.",
+   "Suggested Database Schema",
+   "PostgreSQL (with PostGIS recommended) for geospatial queries and reliable transactional storage.",
+   "Core API Endpoints (examples)",
+   "REST endpoints (FastAPI) used by the Flutter app:",
+   "POST /api/auth/login — login & token",
+   "POST /api/alerts — submit a new alert (media + geo)",
+   "GET /api/alerts — list / filter alerts",
+   "GET /api/alerts/id — alert details",
+   "PATCH /api/alerts/id/status — update lifecycle",
+   "GET /api/firestations — list stations",
+   "POST /api/notifications/send — send targeted push",
+   "Frontend Tech & Packages",
+   "Flutter stack and packages used in the app:",
+   "dio + retrofit — HTTP client & API generation",
+   "flutter_dotenv — environment configuration",
+   "bloc / flutter_bloc / hydrated_bloc — state management & persistence",
+   "go_router — navigation",
+   "hive / hive_flutter — local caching",
+   "cached_network_image — media caching",
+   "flutter_screenutil, google_fonts, material 3 — responsive + modern UI",
+   "cloudinary (uploads) + loading_indicator + shimmer — UX polish",
+   "FastAPI — REST API & background tasks",
+   "PostgreSQL (+ PostGIS) — geospatial queries & storage",
+   "Redis (optional) — queueing and rate-limiting",
+   "OneSignal / FCM — push notifications",
+   "Cloudinary — media hosting",
+   "Docker — containerized deployments",
+   "Security & Operational Notes",
+   "Use bcrypt for password hashing; JWT for stateless auth",
+   "Validate & sanitize uploads; limit image/video sizes",
+   "Rate-limit alert creation to avoid spam / false alarms",
+   "Use HTTPS in production; never commit secrets to the repo",
+   "Use Sentry/Crashlytics for error monitoring and observability",
+   "Containerize backend (Docker) and deploy to cloud/container platform. Frontend builds distributed via Play Store / TestFlight or internal distribution. Automate migrations and CI for tests.",
+   "Next Steps / Roadmap",
+   "Automatic assignment using PostGIS nearest-neighbor queries",
+   "Heatmap & analytics dashboard for incident clustering",
+   "Advanced dispatcher UI with responder ETA & resource tracking",
+   "ML-based severity prediction from uploaded images (privacy-aware)",
+   "This Fire Alert App packs geospatial routing, realtime dispatching, and admin tooling to help reduce response times and coordinate resources effectively — designed for production readiness with FastAPI and PostgreSQL on the backend and a polished, Material 3 Flutter frontend."
+  ],
+  "platforms": [
+   "mobile",
+   "web"
+  ],
+  "context": "personal"
+ }
+]

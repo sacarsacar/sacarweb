@@ -1,0 +1,71 @@
+[
+  {
+    "id": "drop",
+    "company": "Drop",
+    "role": "Flutter Developer, sole mobile engineer",
+    "period": "Mar 2026 — Present",
+    "location": "Kalanki, Kathmandu",
+    "address": "Advanced College of Engineering and Management, 14 Bhuwaneshwari Marg, Kathmandu, Bagmati Province 44600",
+    "website": "https://dropit.club",
+    "summary": "A real-time social platform where groups share photos and video in shared spaces. A ~383k-line Flutter codebase on iOS and Android, live on the App Store and Google Play.",
+    "highlights": [
+      "Built the GitLab CI/CD pipeline: every merge ships to TestFlight and Play Internal Testing, with one-click production releases to both stores, using fastlane on a self-hosted Mac runner.",
+      "Added a 1-minute preflight stage that catches signing, secret and version errors before a 30-minute build, and a collision-free build-number scheme for dev and prod builds.",
+      "Work on a custom camera stack: a forked camerawesome with Kotlin and Swift patches for 120 fps slow motion, time-lapse, HDR, lens switching and stabilisation.",
+      "Built native features over 8 MethodChannels, including a StoreKit 2 purchase bridge in Swift, WidgetKit and Android home-screen widgets, and an iOS share extension.",
+      "Work on offline-first uploads that survive the app being killed, using durable SQLite intents, idempotency keys and S3 multipart resume, so a retry never duplicates a post.",
+      "Work on real-time chat and calls: 11 Socket.IO namespaces, end-to-end encrypted messages, and WebRTC calls with CallKit and ConnectionService.",
+      "Tuned feed and video performance with a device-tier model for prefetch depth, buffers and decode sizes. Also contribute to the Next.js web client."
+    ],
+    "stack": [
+      "flutter",
+      "dart",
+      "kotlin",
+      "swift",
+      "sockerio",
+      "webrtc",
+      "sqlite",
+      "s3",
+      "fastlane",
+      "gitlab",
+      "next"
+    ],
+    "projects": [
+      "drop",
+      "dropit"
+    ]
+  },
+  {
+    "id": "nnine",
+    "company": "NNine Solution",
+    "role": "Flutter Developer",
+    "period": "Nov 2024 — Feb 2026",
+    "location": "Chabahil, Kathmandu",
+    "address": "Chabahil Ganeshthan Marg, Kathmandu, Bagmati Province 44600",
+    "website": "https://www.nnine.training",
+    "summary": "Built Flutter apps across mobile, web and desktop, and on some projects the Django backend behind them too.",
+    "highlights": [
+      "Architected BhansaGhar, a restaurant platform that works offline over the local network or online through the cloud, with WebSocket order updates under 50 ms (Flutter + Django).",
+      "Led the Chwasha Jhol MOMO food-ordering app from start to release, and designed its UI and prototypes in Figma.",
+      "Built the Flutter client for N9Nrms, an attendance and leave system on Android, web and desktop, cutting manual tracking by about 80%.",
+      "Built the player side of an LMS video app with BLoC and protected HLS/DRM streaming.",
+      "Contributed to a multi-cloud monitoring app with Riverpod, map integrations, 2FA and biometric login."
+    ],
+    "stack": [
+      "flutter",
+      "dart",
+      "bloc",
+      "riverpod",
+      "django",
+      "python",
+      "figma"
+    ],
+    "projects": [
+      "N9-attendance",
+      "Multi_Cloud",
+      "sperium-lounge",
+      "Lms_app",
+      "jhol-momo"
+    ]
+  }
+]

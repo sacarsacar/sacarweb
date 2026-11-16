@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Flutter",
+    "tagline": "Build once. Run everywhere.",
+    "color": "#47C5FB"
+  },
+  {
+    "name": "JavaScript",
+    "tagline": "The web's favorite language.",
+    "color": "#f0db4f"
+  },
+  {
+    "name": "HTML",
+    "tagline": "The web starts here.",
+    "color": "#e34c26"
+  },
+  {
+    "name": "CSS",
+    "tagline": "Style that speaks.",
+    "color": "#1572B6"
+  },
+  {
+    "name": "React",
+    "tagline": "UI made simple.",
+    "color": "#61dafb"
+  },
+  {
+    "name": "Dart",
+    "tagline": "Fast. Clean. Sharp.",
+    "color": "#0175C2"
+  },
+  {
+    "name": "Next.js",
+    "tagline": "The future of React apps.",
+    "color": "#000000"
+  },
+  {
+    "name": "Tailwind CSS",
+    "tagline": "Design at light speed.",
+    "color": "#06b6d4"
+  },
+  {
+    "name": "Node.js",
+    "tagline": "JavaScript. Everywhere.",
+    "color": "#6cc24a"
+  },
+  {
+    "name": "Express",
+    "tagline": "Minimal and fast.",
+    "color": "#000000"
+  },
+  {
+    "name": "PostgreSQL",
+    "tagline": "Rock-solid data.",
+    "color": "#336791"
+  },
+  {
+    "name": "MongoDB",
+    "tagline": "Flexible by nature.",
+    "color": "#4db33d"
+  },
+  {
+    "name": "Firebase",
+    "tagline": "Build fast. Scale faster.",
+    "color": "#FFCA28"
+  },
+  {
+    "name": "Django",
+    "tagline": "Web dev done right.",
+    "color": "#092E20"
+  },
+  {
+    "name": "Docker",
+    "tagline": "Ship anywhere.",
+    "color": "#2496ed"
+  },
+  {
+    "name": "Python",
+    "tagline": "Simple. Powerful.",
+    "color": "#3776AB"
+  },
+  {
+    "name": "FastAPI",
+    "tagline": "APIs. Fast and clean.",
+    "color": "#05998A"
+  },
+  {
+    "name": "Figma",
+    "tagline": "Design. Collaborate. Create.",
+    "color": "#F24E1E"
+  },
+  {
+    "name": "TypeScript",
+    "tagline": "Typed JavaScript for scale.",
+    "color": "#007acc"
+  },
+  {
+    "name": "macOS",
+    "tagline": "Where every build starts.",
+    "color": "#000000"
+  },
+  {
+    "name": "Xcode",
+    "tagline": "iOS builds, signing, TestFlight.",
+    "color": "#147EFB"
+  },
+  {
+    "name": "Android Studio",
+    "tagline": "Android builds and profiling.",
+    "color": "#3DDC84"
+  },
+  {
+    "name": "Git",
+    "tagline": "Track. Save. Repeat.",
+    "color": "#f05032"
+  },
+  {
+    "name": "GitHub",
+    "tagline": "Where code lives.",
+    "color": "#000000"
+  },
+  {
+    "name": "GitLab CI/CD",
+    "tagline": "Every merge, built and shipped.",
+    "color": "#FC6D26"
+  },
+  {
+    "name": "fastlane",
+    "tagline": "Both stores, one command.",
+    "color": "#00F200"
+  },
+  {
+    "name": "AWS",
+    "tagline": "Cloud that scales.",
+    "color": "#FF9900"
+  },
+  {
+    "name": "VS Code",
+    "tagline": "Editor of choice.",
+    "color": "#007acc"
+  },
+  {
+    "name": "Terminal",
+    "tagline": "Where the magic happens.",
+    "color": "#ff0000"
+  },
+  {
+    "name": "Vercel",
+    "tagline": "Deploy with zero hassle.",
+    "color": "#000000"
+  }
+]

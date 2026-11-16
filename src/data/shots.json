@@ -1,0 +1,220 @@
+{
+ "dairy": [
+  "auth",
+  "cart",
+  "chat",
+  "exchange",
+  "home1",
+  "home2",
+  "home3",
+  "landing",
+  "orders",
+  "products",
+  "profile",
+  "sales",
+  "users",
+  "wallet",
+  "wallet2"
+ ],
+ "firealertsystem": [
+  "alerts",
+  "dashboard",
+  "login",
+  "setting",
+  "stations",
+  "users"
+ ],
+ "jholmomo": [
+  "auth",
+  "cart",
+  "checkout",
+  "fav",
+  "landing",
+  "order",
+  "trackorders"
+ ],
+ "lms": [
+  "lmsabout",
+  "lmsachievement",
+  "lmschapters",
+  "lmsenroll",
+  "lmsenrollment",
+  "lmshome",
+  "lmsnotification",
+  "lmspayment",
+  "lmsprofile",
+  "lmssettings",
+  "lmsvideo"
+ ],
+ "multicloud": [
+  "auth",
+  "dashboard",
+  "map",
+  "twofa"
+ ],
+ "nnineattendence": [
+  "attendence_history",
+  "attendence_leave",
+  "attendence_playstore",
+  "attendence_profile",
+  "attendence_punchin",
+  "attendence_settings",
+  "attendence_web1",
+  "attendence_web2"
+ ],
+ "portfolio": [
+  "landing",
+  "navbar",
+  "project",
+  "projects",
+  "skills"
+ ],
+ "quickdo": [
+  "activetask",
+  "addtodo",
+  "analytics",
+  "completedtask",
+  "features",
+  "groups",
+  "groupsdark",
+  "reminders"
+ ],
+ "skillverify": [
+  "landing1",
+  "landing2",
+  "output1",
+  "output2",
+  "output3",
+  "output4",
+  "upload"
+ ],
+ "sperium-lounge": [
+  "auth",
+  "category",
+  "home",
+  "order",
+  "qr",
+  "web1",
+  "web2",
+  "web3",
+  "web4"
+ ],
+ "devsim": [
+  "screen-1"
+ ],
+ "fancykeyboard": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "fancytext": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "globalequalizer": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "gridverse": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "localplay": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "mindverse": [
+  "screen-1"
+ ],
+ "partyverse": [
+  "screen-1"
+ ],
+ "physicsverse": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "quotely": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "shiftplanner": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "toolshub": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "worklist": [
+  "screen-1"
+ ],
+ "drop": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "dropit": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4"
+ ]
+}
