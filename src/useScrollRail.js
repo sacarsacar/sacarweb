@@ -22,17 +22,23 @@ export function railFrom(top, height, viewport, count) {
 /** Maps scroll over the work section onto a continuous rail index. */
 export function useScrollRail(count, enabled = true) {
   const ref = useRef(null)
-  const [state, setState] = useState({ railPos: 0, engage: 0 })
+  const [state, setState] = useState({ railPos: 0, engage: 0, inView: true })
 
   useEffect(() => {
     const el = ref.current
-    if (!el || !enabled) { setState({ railPos: 0, engage: 0 }); return }
+    if (!el || !enabled) { setState({ railPos: 0, engage: 0, inView: true }); return }
     let frame = 0
 
     const read = () => {
       frame = 0
       const r = el.getBoundingClientRect()
-      setState(railFrom(r.top, r.height, window.innerHeight, count))
+      // inView lets the canvas stop rendering once the rail has scrolled away.
+      const next = { ...railFrom(r.top, r.height, window.innerHeight, count), inView: r.bottom > 0 }
+      // Same values → same object, so React skips the render. Without this every
+      // scroll frame re-rendered the whole page, long after the rail was gone.
+      setState((s) =>
+        s.railPos === next.railPos && s.engage === next.engage && s.inView === next.inView ? s : next
+      )
     }
 
     const onScroll = () => { if (!frame) frame = requestAnimationFrame(read) }

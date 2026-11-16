@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { motionOff } from './useTheme'
 
 /**
  * Reveal on scroll. Per-element observer rather than one page-wide scan, so
@@ -12,7 +13,7 @@ export function Reveal({ children, delay = 0, as: Tag = 'div', className = '', .
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { setShown(true); return }
+    if (motionOff()) { setShown(true); return }
 
     const io = new IntersectionObserver(
       ([entry]) => {

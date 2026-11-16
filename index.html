@@ -3,21 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.png" type="image/png" />
-    <title>Sakar Chaulagain — Flutter Developer</title>
-    <meta name="description" content="Flutter developer from Kathmandu, Nepal. Cross-platform apps that ship — an attendance platform on the Play Store, a cloud-free restaurant ordering system, offline-first tools." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="64x64" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0D1214" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#D9DFDD" media="(prefers-color-scheme: light)" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter+Tight:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap" />
+    <title>Sakar Chaulagain — Flutter Developer, Kathmandu</title>
+    <meta name="description" content="Flutter developer in Kathmandu, Nepal, building apps that keep working when the network doesn't — on Google Play, the App Store, the web and pub.dev." />
     <meta name="author" content="Sakar Chaulagain" />
     <meta name="keywords" content="Sakar Chaulagain, Flutter developer, Nepal, Kathmandu, Dart, mobile developer, full-stack, offline-first, Node.js, Django, FastAPI, Go" />
     <link rel="canonical" href="https://sakarchaulagain.com.np/" />
+    <!-- Share previews (LinkedIn, WhatsApp, X, Slack). og.jpg is rendered by
+         scripts/brand-assets.mjs — JPEG, because LinkedIn ignores WebP. Absolute
+         URLs: crawlers don't resolve relative ones. -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sakar Chaulagain" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://sakarchaulagain.com.np/" />
-    <meta property="og:title" content="Sakar Chaulagain — Flutter Developer" />
-    <meta property="og:description" content="Apps that keep working when the network doesn't. Ten shipped projects in Flutter, Dart, Node, Django and Go." />
-    <meta property="og:image" content="https://sakarchaulagain.com.np/me.webp" />
+    <meta property="og:title" content="Sakar Chaulagain — Flutter Developer, Kathmandu" />
+    <meta property="og:description" content="Apps that keep working when the network doesn't. Flutter apps on Google Play and the App Store, games and tools live on the web, and packages on pub.dev." />
+    <meta property="og:image" content="https://sakarchaulagain.com.np/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sakar Chaulagain, Flutter developer in Kathmandu — app screenshots over a night-sky mountain range." />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Sakar Chaulagain — Flutter Developer" />
+    <meta name="twitter:site" content="@SacarSakar" />
+    <meta name="twitter:title" content="Sakar Chaulagain — Flutter Developer, Kathmandu" />
     <meta name="twitter:description" content="Apps that keep working when the network doesn't." />
-    <meta name="twitter:image" content="https://sakarchaulagain.com.np/me.webp" />
+    <meta name="twitter:image" content="https://sakarchaulagain.com.np/og.jpg" />
+    <meta name="twitter:image:alt" content="Sakar Chaulagain, Flutter developer in Kathmandu — app screenshots over a night-sky mountain range." />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://sakarchaulagain.com.np/#person",
+            "name": "Sakar Chaulagain",
+            "jobTitle": "Flutter Developer",
+            "url": "https://sakarchaulagain.com.np/",
+            "image": "https://sakarchaulagain.com.np/me-avatar.webp",
+            "address": { "@type": "PostalAddress", "addressLocality": "Kathmandu", "addressCountry": "NP" },
+            "worksFor": { "@type": "Organization", "name": "Drop", "url": "https://dropit.club" },
+            "knowsAbout": ["Flutter", "Dart", "Mobile development", "Offline-first apps"],
+            "sameAs": [
+              "https://sakarc.com.np/",
+              "https://github.com/sacarsacar",
+              "https://gitlab.com/sakarsacars",
+              "https://np.linkedin.com/in/sakar-chaulagain",
+              "https://x.com/SacarSakar",
+              "https://www.instagram.com/sakarchaulagain",
+              "https://www.facebook.com/profile.php?id=61551658731708"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://sakarchaulagain.com.np/#website",
+            "name": "Sakar Chaulagain",
+            "url": "https://sakarchaulagain.com.np/",
+            "inLanguage": "en",
+            "publisher": { "@id": "https://sakarchaulagain.com.np/#person" }
+          }
+        ]
+      }
+    </script>
     <script>
       // Set theme before first paint to avoid a flash.
       (function () {
@@ -25,11 +78,35 @@
           var t = localStorage.getItem('theme');
           if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
           document.documentElement.dataset.theme = t;
+          var m = localStorage.getItem('motion');
+          if (!m) m = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'off' : 'on';
+          document.documentElement.dataset.motion = m;
         } catch (e) { document.documentElement.dataset.theme = 'dark'; }
       })();
     </script>
   </head>
   <body>
+    <!-- For crawlers that don't run JS. Lists the featured, shipped projects in
+         src/data/projects.json — update both. -->
+    <noscript>
+      <h1>Sakar Chaulagain — Flutter Developer, Kathmandu, Nepal</h1>
+      <p>Apps that keep working when the network doesn't. The project showcase needs JavaScript; the main apps are below.</p>
+      <ul>
+        <li><a href="https://play.google.com/store/apps/details?id=com.gcc.drop">Drop</a> — Community engagement app (<a href="https://apps.apple.com/np/app/drop-community-engagement-app/id6755708377">App Store</a>)</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.quickdo">QuickDo</a> — Task manager</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.localplay">LocalPlay</a> — Music player</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.globalequilizer">Global Equalizer</a> — Audio equalizer</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.shift_roster_planner">Shift &amp; Roster Planner</a> — Shift planner</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.gridverse">GridVerse</a> — Grid game collection (<a href="https://gridverse-hcw.web.app">web</a>)</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.toolshub">Tools Hub</a> — Utility toolkit</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.fancykeyboard">Fancy Keyboard</a> — Android keyboard</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.mindverse">MindVerse</a> — Puzzle games (<a href="https://mindverse-hcw.web.app">web</a>)</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.partyverse">PartyVerse</a> — Party games (<a href="https://partyverse-game.web.app">web</a>)</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.fancytext">Fancy Text</a> — Unicode text generator</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.himalayancodeworks.quotely">Quotely</a> — Quotes app</li>
+      </ul>
+      <p><a href="/cv.pdf">Résumé</a> · <a href="/legacy/mini-projects/">HTML, CSS &amp; JS mini projects</a> · <a href="https://github.com/sacarsacar">GitHub</a> · <a href="https://np.linkedin.com/in/sakar-chaulagain">LinkedIn</a> · <a href="https://sakarc.com.np/">sakarc.com.np</a></p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

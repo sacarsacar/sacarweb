@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 /** Dev-only browser check for the case study dialog. Needs a running dev server. */
 import puppeteer from 'puppeteer-core'
+import { readFileSync } from 'node:fs'
+
+// (this file shadows URL below, so resolve the path without it)
+const TOTAL = JSON.parse(readFileSync(`${import.meta.dirname}/../src/data/projects.json`, 'utf8')).length
 
 const URL = process.argv[2] ?? 'http://localhost:5199/'
 const OUT = process.argv[3] ?? '/tmp'
@@ -18,11 +22,15 @@ await p.goto(URL, { waitUntil: 'networkidle2' })
 await new Promise((r) => setTimeout(r, 2000))
 
 const results = {}
-await p.evaluate(() => document.querySelector('#index > ul > li button').click())
+// First row with a write-up — placeholders are too short to scroll.
+await p.evaluate(() =>
+  [...document.querySelectorAll('#index > ul > li button')]
+    .find((b) => !b.textContent.includes('Case study soon')).click()
+)
 await new Promise((r) => setTimeout(r, 1200))
-results['dialog opens'] = await p.evaluate(() => !!document.querySelector('dialog')?.open)
+results['dialog opens'] = await p.evaluate(() => !!document.querySelector('dialog[open]')?.open)
 results['focus trapped inside'] = await p.evaluate(
-  () => document.querySelector('dialog')?.contains(document.activeElement)
+  () => document.querySelector('dialog[open]')?.contains(document.activeElement)
 )
 // Real wheel event, not a scrollTop assignment: the bug was Lenis capturing
 // wheel on the document so the dialog's own scroller never saw it.
@@ -30,18 +38,18 @@ await p.mouse.move(700, 500)
 await p.mouse.wheel({ deltaY: 600 })
 await new Promise((r) => setTimeout(r, 500))
 results['case study scrolls on wheel'] = await p.evaluate(
-  () => (document.querySelector('dialog [data-lenis-prevent]')?.scrollTop ?? 0) > 50
+  () => (document.querySelector('dialog[open] [data-lenis-prevent]')?.scrollTop ?? 0) > 50
 )
 // Width: on a 1440px viewport the content must not be boxed into a narrow column.
 results['case study uses the width'] = await p.evaluate(() => {
-  const el = document.querySelector('dialog h2')
+  const el = document.querySelector('dialog[open] h2')
   return el ? el.getBoundingClientRect().width > 1000 : false
 })
 await p.screenshot({ path: `${OUT}/dialog.png` })
 
 await p.keyboard.press('Escape')
 await new Promise((r) => setTimeout(r, 600))
-results['Escape closes'] = await p.evaluate(() => !document.querySelector('dialog')?.open)
+results['Escape closes'] = await p.evaluate(() => !document.querySelector('dialog[open]')?.open)
 
 // Platform filter: picking "Desktop" must narrow the list, not empty or ignore it.
 // Count across a re-render — React has not committed by the end of the click tick.
@@ -53,15 +61,15 @@ await p.evaluate(() => {
 await new Promise((r) => setTimeout(r, 400))
 const after = await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)
 results['filter narrows the list'] = after > 0 && after < before
-// Two filter groups now, each with exactly one pressed chip.
+// Three filter groups (category, type, platform), each with exactly one pressed chip.
 results['filter marks itself pressed'] = await p.evaluate(
-  () => [...document.querySelectorAll('#index [aria-pressed="true"]')].length === 2
+  () => [...document.querySelectorAll('#index [aria-pressed="true"]')].length === 3
 )
 
 // Type and Platform combine with AND.
 await p.evaluate(() => {
   const chips = [...document.querySelectorAll('#index [aria-pressed]')]
-  chips.find((c) => c.textContent.includes('Client work')).click()
+  chips.find((c) => c.textContent.startsWith('Work')).click()
 })
 await new Promise((r) => setTimeout(r, 400))
 results['type + platform combine'] = await p.evaluate(
@@ -77,14 +85,14 @@ await p.evaluate(() => {
 })
 await new Promise((r) => setTimeout(r, 400))
 const initial = await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)
-results['starts collapsed at 5'] = initial === 5
+results['starts collapsed at 8'] = initial === 8
 await p.evaluate(() => {
   const b = [...document.querySelectorAll('#index button')].find((x) => /See all/.test(x.textContent))
   b?.click()
 })
 await new Promise((r) => setTimeout(r, 400))
 results['See all reveals the rest'] =
-  (await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)) === 10
+  (await p.evaluate(() => document.querySelectorAll('#index > ul > li').length)) === TOTAL
 
 results['skip link is first tab stop'] = await p.evaluate(() => {
   document.body.focus()

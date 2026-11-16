@@ -98,5 +98,123 @@
   "web2",
   "web3",
   "web4"
+ ],
+ "devsim": [
+  "screen-1"
+ ],
+ "fancykeyboard": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "fancytext": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "globalequalizer": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "gridverse": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "localplay": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "mindverse": [
+  "screen-1"
+ ],
+ "partyverse": [
+  "screen-1"
+ ],
+ "physicsverse": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "quotely": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "shiftplanner": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "toolshub": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "worklist": [
+  "screen-1"
+ ],
+ "drop": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4",
+  "screen-5",
+  "screen-6",
+  "screen-7",
+  "screen-8"
+ ],
+ "dropit": [
+  "screen-1",
+  "screen-2",
+  "screen-3",
+  "screen-4"
  ]
 }

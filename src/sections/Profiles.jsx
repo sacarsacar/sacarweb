@@ -1,4 +1,17 @@
 import { socials } from '../data'
+import { ICONS } from '../data/icons'
+import { Reveal } from '../Reveal'
+
+/** The platform's own mark — stands in wherever there's no profile photo. */
+export function BrandIcon({ id, className = '' }) {
+  const d = ICONS[id]
+  if (!d) return null
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d={d} />
+    </svg>
+  )
+}
 
 /**
  * Profile nodes wired into one strip — the same mesh idea as the device rail,
@@ -7,18 +20,18 @@ import { socials } from '../data'
  */
 export function Profiles() {
   return (
-    <div className="mt-10">
+    <Reveal className="profiles mt-12">
       <p className="label">Find me</p>
 
       <ul className="relative mt-5 flex w-fit max-w-full flex-wrap items-start gap-x-5 gap-y-6 sm:gap-x-7">
         {/* The connecting hairline — profiles as a network, not a button row. */}
         <span
           aria-hidden
-          className="pointer-events-none absolute left-0 right-0 top-7 hidden h-px bg-line sm:block"
+          className="profiles-line pointer-events-none absolute left-0 right-0 top-7 hidden h-px bg-line sm:block"
         />
 
-        {socials.map((s) => (
-          <li key={s.id} className="relative">
+        {socials.map((s, i) => (
+          <li key={s.id} className="profile-node relative" style={{ '--i': i }}>
             <a
               href={s.url}
               target="_blank"
@@ -41,9 +54,11 @@ export function Profiles() {
                                group-hover:scale-110"
                   />
                 ) : (
-                  <span aria-hidden className="font-display text-lg text-muted">
-                    {s.label.charAt(0)}
-                  </span>
+                  <BrandIcon
+                    id={s.id}
+                    className="h-6 w-6 text-fg transition-[transform,color] duration-500
+                               group-hover:scale-110 group-hover:text-accent"
+                  />
                 )}
               </span>
 
@@ -55,6 +70,6 @@ export function Profiles() {
           </li>
         ))}
       </ul>
-    </div>
+    </Reveal>
   )
 }

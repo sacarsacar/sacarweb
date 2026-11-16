@@ -1,14 +1,19 @@
-import { useEffect, useRef } from 'react'
-import { StatusPill } from './Work'
+import { useEffect, useRef, useState } from 'react'
+import { StatusPill, OrgLine } from './Work'
+import { Sky, ThemeSwitch } from '../Sky'
+import { TechChip } from './Rest'
 
 /** Native <dialog>: focus trap, Esc-to-close and inertness come free. */
-export function CaseStudy({ project, onClose }) {
+export function CaseStudy({ project, onClose, isDark, onToggleTheme }) {
   const ref = useRef(null)
 
   useEffect(() => {
     const d = ref.current
     if (!d) return
-    if (project && !d.open) d.showModal()
+    if (project && !d.open) {
+      d.showModal()
+      d.querySelector('[data-close]')?.focus() // first in the bar is the theme switch
+    }
     if (!project && d.open) d.close()
   }, [project])
 
@@ -28,14 +33,23 @@ export function CaseStudy({ project, onClose }) {
               <StatusPill shipped={project.shipped} />
               <span className="label truncate">{project.category}</span>
             </div>
-            <button
-              onClick={onClose}
-              autoFocus
-              className="label shrink-0 rounded-full border border-line px-4 py-2
-                         hover:border-accent hover:text-accent"
-            >
-              Close ✕
-            </button>
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <ShareLink project={project} />
+              <ThemeSwitch isDark={isDark} onToggle={onToggleTheme} />
+              <button
+                onClick={onClose}
+                data-close
+                className="label rounded-full border border-line px-4 py-2
+                           hover:border-accent hover:text-accent"
+              >
+                Close ✕
+              </button>
+            </div>
+          </div>
+
+          {/* The same sky as the home page, as a strip: sun or moon, mountains, birds. */}
+          <div className="relative h-36 overflow-hidden border-b border-line sm:h-52">
+            <Sky band />
           </div>
 
           <div className="mx-auto w-full max-w-[110rem] px-5 py-10 sm:px-8 lg:px-12 lg:py-16">
@@ -47,20 +61,30 @@ export function CaseStudy({ project, onClose }) {
               {/* Meta stays in view while the write-up scrolls past it. */}
               <aside className="lg:sticky lg:top-24 lg:self-start">
                 <div className="space-y-6 border-t border-line pt-6">
+                  {project.org?.company && (
+                    <div>
+                      <p className="label">Built at</p>
+                      <OrgLine org={project.org} className="mt-1.5" />
+                    </div>
+                  )}
                   <Meta label="Platforms" value={project.platformLabels.join(' · ')} />
-                  <Meta label="Frontend" value={project.frontendLabels.join(' · ')} />
-                  <Meta label="Backend" value={project.backendLabels.join(' · ')} />
+                  <TechList label="Frontend" items={project.frontendLabels} />
+                  <TechList label="Backend" items={project.backendLabels} />
                 </div>
 
-                {(project.github || project.live) && (
+                {project.links.length > 0 && (
                   <div className="mt-8 flex flex-wrap gap-3">
-                    {project.live && <LinkBtn href={project.live}>View live</LinkBtn>}
-                    {project.github && <LinkBtn href={project.github}>Source on GitHub</LinkBtn>}
+                    {project.links.map((l) => <LinkBtn key={l.href} href={l.href}>{l.label}</LinkBtn>)}
                   </div>
                 )}
               </aside>
 
               <div className="min-w-0">
+                {project.placeholder && (
+                  <p className="max-w-3xl font-display text-xl leading-snug text-muted sm:text-2xl">
+                    The case study for this project is being written. Check back soon.
+                  </p>
+                )}
                 {project.summary && (
                   <p className="max-w-3xl font-display text-xl leading-snug sm:text-2xl">
                     {project.summary}
@@ -110,6 +134,18 @@ export function CaseStudy({ project, onClose }) {
   )
 }
 
+function TechList({ label, items }) {
+  if (!items?.length) return null
+  return (
+    <div>
+      <p className="label">{label}</p>
+      <ul className="mt-2 flex flex-wrap gap-1.5">
+        {items.map((name) => <TechChip key={name} name={name} />)}
+      </ul>
+    </div>
+  )
+}
+
 function Meta({ label, value }) {
   if (!value) return null
   return (
@@ -132,3 +168,41 @@ function LinkBtn({ href, children }) {
     </a>
   )
 }
+
+/**
+ * Link straight to this case study (#project/<id>). Phones get the native
+ * share sheet; elsewhere the link is copied, with a visible confirmation.
+ */
+function ShareLink({ project }) {
+  const [copied, setCopied] = useState(false)
+  const share = async () => {
+    const url = `${location.origin}${location.pathname}#project/${project.id}`
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+      try { await navigator.share({ title: `${project.title} — Sakar Chaulagain`, url }) } catch { /* dismissed */ }
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      window.prompt('Copy this link', url) // clipboard blocked
+    }
+  }
+  return (
+    <button
+      onClick={share}
+      aria-label={copied ? 'Link copied' : `Share a link to ${project.title}`}
+      className="label flex h-9 items-center gap-2 rounded-full border border-line px-3 hover:border-accent hover:text-accent"
+    >
+      <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+        strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 shrink-0">
+        {copied
+          ? <path d="M5 12.5l4.5 4.5L19 7.5" />
+          : <path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1" />}
+      </svg>
+      <span aria-live="polite" className="hidden sm:inline">{copied ? 'Link copied' : 'Share'}</span>
+    </button>
+  )
+}
+

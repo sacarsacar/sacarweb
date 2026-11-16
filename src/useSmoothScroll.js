@@ -25,7 +25,7 @@ export function useSmoothScroll(enabled) {
     const onClick = (e) => {
       const a = e.target.closest('a[href^="#"]')
       if (!a) return
-      const el = document.querySelector(a.getAttribute('href'))
+      const el = document.getElementById(a.getAttribute('href').slice(1))
       if (!el) return
       e.preventDefault()
       lenis.scrollTo(el, { offset: -70 })

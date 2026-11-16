@@ -4,7 +4,14 @@
     "label": "GitHub",
     "handle": "sacarsacar",
     "url": "https://github.com/sacarsacar",
-    "photo": "/photos/github.webp"
+    "photo": null
+  },
+  {
+    "id": "gitlab",
+    "label": "GitLab",
+    "handle": "sakarsacars",
+    "url": "https://gitlab.com/sakarsacars",
+    "photo": null
   },
   {
     "id": "linkedin",
