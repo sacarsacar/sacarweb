@@ -32,7 +32,7 @@ for (const view of VIEWS) {
     await page.setViewport(view)
     page.on('console', (m) => { if (m.type() === 'error') errors.push(`[${view.name}/${theme}] ${m.text()}`) })
     page.on('pageerror', (e) => errors.push(`[${view.name}/${theme}] PAGEERROR ${e.message}`))
-    await page.evaluateOnNewDocument((t) => localStorage.setItem('theme', t), theme)
+    await page.evaluateOnNewDocument((t) => localStorage.setItem('theme-choice', t), theme)
     await page.goto(URL, { waitUntil: 'networkidle2', timeout: 60000 })
     await new Promise((r) => setTimeout(r, 2500)) // let textures land
 

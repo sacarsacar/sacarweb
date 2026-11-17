@@ -75,7 +75,7 @@
       // Set theme before first paint to avoid a flash.
       (function () {
         try {
-          var t = localStorage.getItem('theme');
+          var t = localStorage.getItem('theme-choice'); // saved only when the switch is pressed (useTheme.js)
           if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
           document.documentElement.dataset.theme = t;
           var m = localStorage.getItem('motion');
