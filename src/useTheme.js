@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 
+/**
+ * Only a press of the switch is saved. The old 'theme' key was written on every
+ * load, which looked like a choice and stopped the site following the OS — a
+ * new key means those auto-saved values are ignored.
+ */
+const KEY = 'theme-choice'
+const chosen = () => { try { return localStorage.getItem(KEY) } catch { return null } }
+
 /** Theme lives on <html data-theme>. The pre-paint script in index.html sets it first. */
 export function useTheme() {
   const [theme, setTheme] = useState(
@@ -9,16 +17,13 @@ export function useTheme() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
-    try { localStorage.setItem('theme', theme) } catch { /* private mode */ }
   }, [theme])
 
   // Follow the OS only while the user has made no explicit choice.
   useEffect(() => {
-    let stored
-    try { stored = localStorage.getItem('theme') } catch { /* private mode */ }
-    if (stored) return
+    if (chosen()) return
     const mq = matchMedia('(prefers-color-scheme: light)')
-    const sync = () => setTheme(mq.matches ? 'light' : 'dark')
+    const sync = () => { if (!chosen()) setTheme(mq.matches ? 'light' : 'dark') }
     mq.addEventListener('change', sync)
     return () => mq.removeEventListener('change', sync)
   }, [])
@@ -34,6 +39,7 @@ export function useTheme() {
     const next = html.dataset.theme === 'dark' ? 'light' : 'dark'
     const apply = () => {
       html.dataset.theme = next
+      try { localStorage.setItem(KEY, next) } catch { /* private mode */ }
       flushSync(() => setTheme(next))
     }
     if (!document.startViewTransition || motionOff()) {

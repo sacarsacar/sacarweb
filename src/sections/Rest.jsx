@@ -241,9 +241,12 @@ export function Contact() {
  * real, not guessed. One-time setup: the first message sent to a new address
  * triggers an "Activate form" email; until that link is clicked nothing is
  * forwarded. Without JS the plain form POST still reaches the same inbox.
+ * The id is FormSubmit's alias for profile.email (issued on activation), so the
+ * address isn't in the form endpoint. A new address needs a new alias.
  */
-const MAIL_TO = `https://formsubmit.co/${profile.email}`
-const MAIL_TO_AJAX = `https://formsubmit.co/ajax/${profile.email}`
+const FORM_ID = '9cd6fe97124d920bdfe944153997655d'
+const MAIL_TO = `https://formsubmit.co/${FORM_ID}`
+const MAIL_TO_AJAX = `https://formsubmit.co/ajax/${FORM_ID}`
 
 function ContactForm() {
   const [state, setState] = useState('idle') // idle | sending | sent | error
